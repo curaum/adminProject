@@ -1,0 +1,68 @@
+.logo {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  width: 119px;
+  height: 24px;
+}
+
+.focus {
+  background-color: #f3f6f7;
+  width: 208px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  padding-left: 16px;
+  margin-left: -15px;
+  color: #0b485b;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.none_focus {
+  font-size: 14px;
+  color: #000;
+}
+
+.disabled {
+  color: gray;
+  cursor: not-allowed;
+  width: 208px;
+}
+
+.nav_container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 224px;
+  height: 100vh;
+  border-right: 1px solid rgb(229, 229, 229);
+  z-index: 999;
+  padding-top: 82px;
+  cursor: pointer;
+  overflow-y: scroll;
+}
+
+.nav_content {
+  width: 200px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.text_area {
+  margin-left: 24px;
+  width: 200px;
+}
+
+.sub_title {
+  color: #7c7c7c;
+  font-size: 12px;
+  margin: 20px 0 10px 0;
+}
