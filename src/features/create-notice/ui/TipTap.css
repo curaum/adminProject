@@ -1,0 +1,110 @@
+ul,
+ol {
+  padding: 0 1rem;
+  margin: 1.25rem 1rem 1.25rem 0.4rem;
+}
+ul,
+ol li p {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+.editor li {
+  margin-bottom: 4px; /* 리스트 항목 간격 */
+}
+
+.tiptap-container {
+  max-width: 700px;
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.toolbar button {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+.toolbar button.active {
+  background: #0070f3;
+  color: white;
+  border-color: #0070f3;
+}
+
+.toolbar button:hover {
+  background: #eaeaea;
+}
+
+.editor {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 4px;
+  min-height: 200px;
+}
+.editor > div:focus-visible {
+  border: none; /* 테두리 제거 */
+  outline: none; /* focus outline 제거 */
+  box-shadow: none; /* 혹시 그림자 있으면 제거 */
+}
+.editor > div {
+  height: 100%;
+}
+blockquote {
+  margin-left: 40px; /* 기본 들여쓰기 */
+  margin-right: 0;
+}
+.align-dropdown button {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.align-options button {
+  display: block;
+  width: 100%;
+  padding: 5px 10px;
+  text-align: left;
+  border: none;
+  background: white;
+  cursor: pointer;
+}
+
+.align-options button.active {
+  background-color: #0070f3;
+  color: white;
+}
+.heading-dropdown button {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.heading-options button {
+  display: block;
+  width: 100%;
+  padding: 5px 10px;
+  text-align: left;
+  border: none;
+  background: white;
+  cursor: pointer;
+}
+
+.heading-options button.active {
+  background-color: #0070f3;
+  color: white;
+}
