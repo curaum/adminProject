@@ -46,7 +46,7 @@ export const useLogin = () => {
             Math.floor(Date.now() / 1000).toString()
           );
 
-          router.replace("/home");
+          router.replace("/notice");
         }
       }
     } catch (error: any) {

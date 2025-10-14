@@ -8,9 +8,9 @@ import axios, {
 } from "axios";
 import { setCookie } from "../lib/cookies";
 import { apiClient } from "./index";
+import { redirect } from "next/navigation";
 
 let alertShown = false;
-console.log("interceptors.ts - apiClient:", apiClient);
 export function getCookie(name: string) {
   if (typeof document === "undefined") return null;
 
@@ -126,7 +126,7 @@ export async function accessTokenRefresh() {
       } else {
         alert("토큰 만료: 로그인 페이지로 이동합니다.");
       }
-      router.push({ name: "Login" });
+      redirect("/login");
     }
 
     throw err; // 에러를 다시 throw하여 호출 측에서 처리할 수 있도록 전달
