@@ -1,0 +1,48 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 360px;
+}
+.login,
+.password {
+  width: 100%;
+  font-size: 14px;
+  color: #7c7c7c;
+}
+.login > p,
+.password > p {
+  margin-bottom: 8px;
+}
+.login_input,
+.password_input {
+  width: 360px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 4px;
+  border: 1px solid #e5e5e5;
+  padding: 10px;
+  font-size: 16px;
+}
+.login_input::placeholder,
+.password_input::placeholder {
+  color: #7c7c7c;
+}
+.submit_button {
+  border-radius: 4px;
+  background: #f5f7f7;
+  color: #7c7c7c;
+  font-weight: 500;
+  width: 360px;
+  height: 48px;
+  flex-shrink: 0;
+  border: 0;
+}
+.login_persist {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 16px;
+  color: #7c7c7c;
+  cursor: pointer;
+}
