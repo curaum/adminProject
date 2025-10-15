@@ -1,0 +1,85 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+/* 상단 헤더 영역 */
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.headerBox {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  color: #bfbfbf;
+  height: 60px;
+  min-width: 1158px;
+  color: #7c7c7c;
+}
+
+.titleHeader {
+  padding-left: 8px;
+  width: 948px;
+}
+
+.dateHeader {
+  padding-left: 8px;
+}
+
+/* 공지사항 리스트 */
+.noticeList {
+  display: flex;
+  flex-direction: column;
+  width: 1158px;
+  gap: 1px;
+}
+
+.noticeRow {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  height: 64px;
+  color: #3a3a3a;
+  font-weight: 500;
+}
+
+.noticeTitleBox {
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  width: 948px;
+}
+
+.importantBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 20px;
+  border-radius: 18px;
+  font-size: 10px;
+  color: #fe665c;
+  border: 1px solid #fe665c;
+  margin-right: 8px;
+}
+
+.noticeDate {
+  width: 122px;
+  padding-left: 8px;
+  color: #3a3a3a;
+  white-space: nowrap;
+}
+
+.detailButton {
+  width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.detailButton:hover {
+  cursor: pointer;
+}
