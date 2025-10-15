@@ -6,6 +6,8 @@ import type { NoticeItem } from "@/entities/notice/model/types";
 
 export function useNoticeList() {
   const [notices, setNotices] = useState<NoticeItem[]>([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -16,6 +18,8 @@ export function useNoticeList() {
     try {
       const response = await getNoticeList({ page, size });
       setNotices(response.data.content);
+      setTotalPages(response.data.totalPages);
+      setTotalElements(response.data.totalElements);
     } catch (err: any) {
       // 에러 메시지 처리
       setError(
@@ -26,5 +30,12 @@ export function useNoticeList() {
     }
   };
 
-  return { notices, loading, error, fetchNoticeList };
+  return {
+    notices,
+    totalPages,
+    totalElements,
+    loading,
+    error,
+    fetchNoticeList,
+  };
 }

@@ -8,36 +8,14 @@ import { formatDateAndTime } from "@/shared/utils/dateUtil";
 import styles from "./NoticeList.module.css";
 
 export default function NoticeListPage() {
-  const { notice, loading, error, fetchNoticeList } = useNoticeList();
-  const notices = [
-    {
-      pid: 1,
-      title: "공지사항",
-      type: "IMPORTANT",
-      createdAt: "2025-10-15T06:27:45.777Z",
-      modifiedAt: "2025-10-15T06:27:45.777Z",
-      createdBy: 1,
-      modifiedBy: 1,
-    },
-    {
-      pid: 2,
-      title: "공지사항",
-      type: "IMPORTANT",
-      createdAt: "2025-10-15T06:27:45.777Z",
-      modifiedAt: "2025-10-15T06:27:45.777Z",
-      createdBy: 1,
-      modifiedBy: 1,
-    },
-    {
-      pid: 3,
-      title: "공지사항",
-      type: "IMPORTANT",
-      createdAt: "2025-10-15T06:27:45.777Z",
-      modifiedAt: "2025-10-15T06:27:45.777Z",
-      createdBy: 1,
-      modifiedBy: 1,
-    },
-  ];
+  const {
+    notices,
+    totalPages,
+    totalElements,
+    loading,
+    error,
+    fetchNoticeList,
+  } = useNoticeList();
   const [page, setPage] = useState(0);
   const pageSize = 20;
   const handlePageChange = (newPage: number) => {
@@ -64,8 +42,8 @@ export default function NoticeListPage() {
     fetchNoticeList(0, pageSize); // page=0, size=10
   }, []);
 
-  // if (loading) return <div>로딩 중...</div>;
-  // if (error) return <div>오류 발생: {error}</div>;
+  if (loading) return <div>로딩 중...</div>;
+  if (error) return <div>오류 발생: {error}</div>;
 
   return (
     <div className={styles.container}>
@@ -75,7 +53,7 @@ export default function NoticeListPage() {
           <div className={styles.dateHeader}>작성일시</div>
         </div>
         <Pagination
-          total={300}
+          total={totalElements}
           pageSize={pageSize}
           page={page}
           onPageChange={handlePageChange}

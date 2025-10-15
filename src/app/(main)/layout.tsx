@@ -17,7 +17,7 @@ export default function RootLayout({
         <Header />
         <div style={{ paddingTop: "72px", display: "flex" }}>
           <SideNavBar />
-          <div style={{ padding: "40px" }}>{children}</div>
+          <div style={{ padding: "40px", width: "100%" }}>{children}</div>
         </div>
       </body>
     </html>

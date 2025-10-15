@@ -35,6 +35,7 @@
 
 .pageNumber:hover p {
   text-decoration: underline;
+  cursor: pointer;
 }
 
 .currentPage {

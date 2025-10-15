@@ -7,6 +7,6 @@ import { AxiosResponse } from "axios";
 export const getUserInfo = async (): Promise<
   AxiosResponse<UserInfoResponse>
 > => {
-  const response = await apiClient.get("api/user");
+  const response = await apiClient.get("api/admin/user");
   return response;
 };
