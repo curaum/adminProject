@@ -180,9 +180,8 @@ strong {
 }
 
 /* 11. 포커스 outline 스타일 */
-:focus {
-  outline: 2px solid #2684ff;
-  outline-offset: 2px;
+*:focus {
+  outline: 1px solid #005a74;
 }
 
 /* 12. Next.js SSR 환경용 높이 설정 */

@@ -6,7 +6,7 @@ import AES256 from "@/shared/lib/aes256";
 export const loginApi = {
   login: async ({ id, pw, os }: LoginParams) => {
     return axios.post(
-      "http://119.192.215.129:503/user/login",
+      "http://119.192.215.129:503/api/user/login",
       { id: id, pw: AES256.encrypt(String(pw)), os: os },
       {
         headers: {
