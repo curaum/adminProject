@@ -17,6 +17,7 @@ export const LoginForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
+      <p className={styles.title}>로그인</p>
       <div className={styles.login}>
         <p>아이디</p>
         <input

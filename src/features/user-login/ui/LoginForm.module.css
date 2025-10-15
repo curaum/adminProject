@@ -4,6 +4,11 @@
   gap: 24px;
   width: 360px;
 }
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0b485b;
+}
 .login,
 .password {
   width: 100%;
