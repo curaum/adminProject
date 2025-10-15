@@ -47,7 +47,6 @@ export const LoginForm = () => {
           alt={isSaveId ? "Checked" : "Unchecked"}
           width={24}
           height={24}
-          style={{ marginTop: "-2px" }}
         />
         로그인 상태 유지하기
       </label>

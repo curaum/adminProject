@@ -1,3 +1,13 @@
+/* ===== Reset + Normalize + Noto Sans KR 기본 폰트 ===== */
+
+/* 1. 박스 모델 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* 2. 여백 제거 */
 html,
 body,
 div,
@@ -81,12 +91,12 @@ audio,
 video {
   margin: 0;
   padding: 0;
-  border: 0 !important;
-  font-size: 100%;
+  border: 0;
   font: inherit;
   vertical-align: baseline;
 }
-/* HTML5 display-role reset for older browsers */
+
+/* 3. HTML5 요소 display 초기화 */
 article,
 aside,
 details,
@@ -100,36 +110,84 @@ nav,
 section {
   display: block;
 }
-body {
-  line-height: 1;
+
+/* 4. 전체 글꼴 및 기본 텍스트 스타일 */
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
 }
+
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  color: #111;
+  background-color: #fff;
+  font-family: "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* 5. 리스트 스타일 제거 */
 ol,
 ul {
   list-style: none;
 }
-blockquote,
-q {
-  quotes: none;
+
+/* 6. 링크 스타일 초기화 */
+a {
+  text-decoration: none;
+  color: inherit;
+  background-color: transparent;
 }
-blockquote:before,
-blockquote:after,
-q:before,
-q:after {
-  content: "";
-  content: none;
+
+/* 7. 이미지, 비디오 */
+img,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
+
+/* 8. 테이블 관련 초기화 */
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-  font-family: "Noto Sans KR", sans-serif !important;
+
+/* 9. 폼 요소 초기화 */
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  background: none;
+  border: none;
+  color: inherit;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+button {
+  cursor: pointer;
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* 10. strong, b는 굵게 유지 */
+b,
+strong {
+  font-weight: bolder;
+}
+
+/* 11. 포커스 outline 스타일 */
+:focus {
+  outline: 2px solid #2684ff;
+  outline-offset: 2px;
+}
+
+/* 12. Next.js SSR 환경용 높이 설정 */
+html,
+body,
+#__next {
+  height: 100%;
 }
