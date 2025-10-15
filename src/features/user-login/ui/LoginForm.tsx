@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useLogin } from "../model/useLogin";
 import Image from "next/image";
 import styles from "./LoginForm.module.css";
+import { Button } from "@/shared/ui/button";
 export const LoginForm = () => {
   const { login } = useLogin();
   const [id, setId] = useState("");
@@ -51,9 +52,7 @@ export const LoginForm = () => {
         />
         로그인 상태 유지하기
       </label>
-      <button type="submit" className={styles.submit_button}>
-        로그인
-      </button>
+      <Button text="로그인" type="submit" disabled={!id || !pw} />
     </form>
   );
 };

@@ -33,16 +33,7 @@
 .password_input::placeholder {
   color: #7c7c7c;
 }
-.submit_button {
-  border-radius: 4px;
-  background: #f5f7f7;
-  color: #7c7c7c;
-  font-weight: 500;
-  width: 360px;
-  height: 48px;
-  flex-shrink: 0;
-  border: 0;
-}
+
 .login_persist {
   display: flex;
   align-items: center;
