@@ -11,9 +11,15 @@
   padding: 40px;
 }
 .login_right {
+  position: relative;
   width: 50%;
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.logo {
+  position: absolute;
+  top: 40px;
+  left: 0;
 }
