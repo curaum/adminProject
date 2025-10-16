@@ -38,14 +38,10 @@ export interface Pageable {
   paged: boolean;
 }
 
-export interface NoticeListResponse {
-  total: number;
-  notices: NoticeItem[];
-}
-
 export interface NoticeDetailResponse extends NoticeItem {
   imageList: File[];
   attachmentList: File[];
+  content: string;
 }
 
 export interface AddNoticeRequest {

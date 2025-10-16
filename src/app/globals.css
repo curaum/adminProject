@@ -1,2 +1,16 @@
 @import url("reset.css");
 @import url("normalize.css");
+/* globals.css */
+.layout-body {
+  padding-left: 224px;
+}
+
+.layout-content {
+  padding-top: 72px;
+  display: flex;
+}
+
+.page-content {
+  padding: 40px;
+  width: 100%;
+}

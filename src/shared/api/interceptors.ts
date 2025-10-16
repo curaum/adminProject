@@ -40,6 +40,7 @@ apiClient.interceptors.request.use(
     } else if (memoryToken) {
       config.headers.Authorization = "Bearer " + memoryToken;
     }
+    console.log("요청 헤더:", config.headers);
     return config;
   },
   function (error: AxiosError): Promise<AxiosError> {

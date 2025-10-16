@@ -6,7 +6,7 @@ import { useNoticeList } from "@/entities/notice/model/useNoticeList";
 import Pagination from "@/shared/ui/Pagination";
 import { formatDateAndTime } from "@/shared/utils/dateUtil";
 import styles from "./NoticeList.module.css";
-
+import { getNoticeDetail } from "@/entities/notice/api/getNoticeDetail";
 export default function NoticeListPage() {
   const {
     notices,
@@ -40,6 +40,7 @@ export default function NoticeListPage() {
   // 페이지가 마운트될 때 공지사항 리스트 호출
   useEffect(() => {
     fetchNoticeList(0, pageSize); // page=0, size=10
+    getNoticeDetail(37);
   }, []);
 
   if (loading) return <div>로딩 중...</div>;

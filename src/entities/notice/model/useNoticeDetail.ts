@@ -23,4 +23,11 @@ export function useNoticeDetail() {
       setLoading(false);
     }
   };
+
+  return {
+    notice,
+    loading,
+    error,
+    fetchNoticeDetail,
+  };
 }

@@ -12,14 +12,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body style={{ paddingLeft: "224px" }}>
-        <Header />
-        <div style={{ paddingTop: "72px", display: "flex" }}>
-          <SideNavBar />
-          <div style={{ padding: "40px", width: "100%" }}>{children}</div>
-        </div>
-      </body>
-    </html>
+    <div className="layout-body">
+      <Header />
+      <div className="layout-content">
+        <SideNavBar />
+        <div className="page-content">{children}</div>
+      </div>
+    </div>
   );
 }
