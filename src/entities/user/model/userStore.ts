@@ -1,13 +1,15 @@
-import { getUserInfo } from "../api/getUserInfo";
+// src/entities/user/model/userStore.ts
+import { create } from "zustand";
+import { UserInfoResponse } from "./types";
 
-export const useUserStore = async () => {
-  try {
-    const response = await getUserInfo();
-    // commit("SET_USER_INFO", JSON.parse(response.data));
+interface UserState {
+  userInfo: UserInfoResponse | null;
+  setUserInfo: (user: UserInfoResponse) => void;
+  clearUserInfo: () => void;
+}
 
-    return response;
-  } catch (err) {
-    // handleAPIException("getUserInfo " + err);
-    throw err;
-  }
-};
+export const useUserStore = create<UserState>((set) => ({
+  userInfo: null,
+  setUserInfo: (user) => set({ userInfo: user }),
+  clearUserInfo: () => set({ userInfo: null }),
+}));

@@ -3,9 +3,7 @@ import { useRouter } from "next/navigation";
 import { loginApi } from "../api/login";
 import { getUserInfo } from "@/entities/user/api/getUserInfo";
 import { setCookie } from "@/shared/lib/cookies";
-import { useUserStore } from "@/entities/user/model/userStore";
-// import { setLocale } from "@/entities/user/lib/setLocale";
-
+import { useFetchUser } from "@/entities/user/model/useFetchUser";
 export const setLocale = (locale: "ko" | "en") => {
   localStorage.setItem("locale", locale);
   document.documentElement.lang = locale;
@@ -21,6 +19,7 @@ const getOS = () => {
 
 export const useLogin = () => {
   const router = useRouter();
+  const { fetchUserInfo } = useFetchUser();
 
   const login = async (id: string, pw: string, isSaveId: boolean) => {
     try {
@@ -36,18 +35,8 @@ export const useLogin = () => {
           setCookie("accessToken", accessToken, keepLogin ? 7 : 1 / 48);
         }
 
-        const userInfoResponse = await getUserInfo();
-        if (userInfoResponse.status === 200) {
-          const locale =
-            userInfoResponse.data.company.locale === "en_US" ? "en" : "ko";
-          setLocale(locale);
-          localStorage.setItem(
-            "loginStatus",
-            Math.floor(Date.now() / 1000).toString()
-          );
-
-          router.replace("/notice");
-        }
+        await fetchUserInfo();
+        router.replace("/notice");
       }
     } catch (error: any) {
       console.error("Login failed", error);

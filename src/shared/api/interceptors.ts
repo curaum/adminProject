@@ -93,7 +93,7 @@ export async function accessTokenRefresh() {
   try {
     const token = getCookie("accessToken") || getCookie("memoryToken"); // accessToken이 없으면 memoryToken 사용
     const response = await axios.post(
-      `${process.env.VUE_APP_LOCAL_URL}api/user/token/refresh`,
+      `${process.env.VUE_APP_LOCAL_URL}api/admin/user/token/refresh`,
       {}, // 요청 body가 필요하지 않다면 빈 객체 전달
       {
         withCredentials: true, // 쿠키 포함 설정
