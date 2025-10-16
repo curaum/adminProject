@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://119.192.215.129:503/";
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 export const apiClient = axios.create({
   timeout: 30000,
   baseURL: BASE_URL,
