@@ -47,7 +47,19 @@ export const LoginForm = () => {
           onClick={() => setIsSaveId((prev) => !prev)}
         />
       </div>
-      <Button text="로그인" type="submit" disabled={!id || !pw} />
+      <Button
+        text="로그인"
+        type="submit"
+        disabled={!id || !pw}
+        activeStyle={{
+          backgroundColor: "#51c37e",
+          color: "#fff",
+        }}
+        inactiveStyle={{
+          backgroundColor: "#f5f7f7",
+          color: "#7c7c7c",
+        }}
+      />
     </form>
   );
 };

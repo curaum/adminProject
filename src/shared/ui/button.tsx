@@ -5,7 +5,15 @@ interface ButtonProps {
   width?: string;
   height?: string;
   type?: "button" | "submit" | "reset";
+  activeStyle?: ButtonStyle;
+  inactiveStyle?: ButtonStyle;
 }
+
+type ButtonStyle = {
+  borderColor?: string;
+  color?: string;
+  backgroundColor?: string; // 필요시
+};
 
 export const Button = ({
   text,
@@ -14,14 +22,28 @@ export const Button = ({
   width = "360px",
   height = "48px",
   type = "button",
+  activeStyle,
+  inactiveStyle,
 }: ButtonProps) => {
   return (
     <>
       <button
         type={type}
         onClick={!disabled ? onClick : undefined} // 비활성화 시 클릭 막기
-        className={`button ${disabled ? "disabled" : "active"}`}
-        style={{ width, height }}
+        className="button"
+        style={{
+          width,
+          height,
+
+          border: disabled
+            ? `1px solid ${inactiveStyle?.borderColor}`
+            : `1px solid ${activeStyle?.borderColor}`,
+
+          color: disabled ? inactiveStyle?.color : activeStyle?.color,
+          backgroundColor: disabled
+            ? inactiveStyle?.backgroundColor
+            : activeStyle?.backgroundColor,
+        }}
       >
         {text}
       </button>
@@ -29,27 +51,8 @@ export const Button = ({
         .button {
           border-radius: 4px;
           font-weight: 500;
-          flex-shrink: 0;
-          border: 0;
           transition: all 0.2s ease;
           cursor: pointer;
-        }
-
-        /* 비활성화 상태 */
-        .button.disabled {
-          background: #f5f7f7;
-          color: #7c7c7c;
-          cursor: not-allowed;
-        }
-
-        /* 활성화 상태 */
-        .button.active {
-          background: #51c37e;
-          color: #ffffff;
-        }
-
-        .button.active:hover {
-          background-color: #45ad6f;
         }
       `}</style>
     </>

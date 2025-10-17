@@ -1,14 +1,17 @@
+"use client";
 import { NoticeDetailResponse } from "@/entities/notice/model/types";
 import AttachmentItem from "@/shared/ui/AttachmentItem";
 import styles from "./NoticeDetailPage.module.css";
 import Image from "next/image";
 import Check from "@/shared/ui/Check";
-
+import BottomNavBar from "@/shared/ui/BottomNavBar";
+import { useRouter } from "next/navigation";
 export default function NoticeDetail({
   notice,
 }: {
   notice: NoticeDetailResponse;
 }) {
+  const router = useRouter();
   const accessTargetList = [
     { key: "FACTORY", label: "제조소", value: true },
     { key: "PARTNER", label: "파트너", value: true },
@@ -23,6 +26,12 @@ export default function NoticeDetail({
       );
     } else {
       return notice.accessTargetList.includes(target);
+    }
+  };
+  const handleDelete = async () => {
+    if (confirm("삭제하시겠습니까?")) {
+      await fetch(`/api/notice/${notice.pid}`, { method: "DELETE" });
+      router.push("/notice");
     }
   };
   return (
@@ -89,6 +98,22 @@ export default function NoticeDetail({
       {notice.attachmentList?.map((item) => (
         <AttachmentItem key={item.url} item={item} isEn={false} />
       ))}
+      <BottomNavBar
+        buttons={[
+          {
+            id: "delete",
+            label: "공지 삭제",
+            onClick: handleDelete,
+            activeStyle: { borderColor: "#FC5B54", color: "#FC5B54" },
+          },
+          {
+            id: "edit",
+            label: "공지 수정",
+            onClick: () => router.push(`/notice/${notice.pid}?mode=edit`),
+            activeStyle: { borderColor: "#51c37e", color: "#51c37e" },
+          },
+        ]}
+      />
     </div>
   );
 }
