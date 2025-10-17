@@ -5,7 +5,7 @@ export async function getNoticeDetail(
   pid: number | string
 ): Promise<AxiosResponse<NoticeDetailResponse>> {
   try {
-    const response = await apiClient.get(`/api/admin/notice`, {
+    const response = await apiClient.get(`api/admin/notice`, {
       params: { pid },
     });
     return response; // MSW를 사용할 때는 response.data에 실제 데이터가 들어있음
