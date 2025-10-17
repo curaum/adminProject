@@ -1,0 +1,73 @@
+.lightgrayText {
+  color: #999999;
+}
+
+.container {
+  width: 1070px;
+}
+
+.cardRow {
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  padding-right: 16px;
+  background-color: white;
+  height: 60px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.flexColumn {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+}
+
+.titleTextContainer {
+  display: flex;
+  align-items: center;
+}
+.importantImage {
+  margin-left: 8px;
+  margin-right: 20px;
+}
+
+.importantBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 20px;
+  border: 1px solid #fe665c;
+  border-radius: 18px;
+  color: #fe665c;
+  font-size: 10px;
+  font-weight: 400;
+}
+
+.titleText {
+  margin-left: 8px;
+  font-weight: 500;
+  color: #3a3a3a;
+}
+
+.createdAtText {
+  color: #3a3a3a;
+  font-weight: 500;
+}
+
+.contentBox {
+  background-color: white;
+  height: 480px;
+  padding: 20px;
+  color: #3a3a3a;
+  margin-bottom: 20px;
+}
+
+.cursor {
+  cursor: pointer;
+}

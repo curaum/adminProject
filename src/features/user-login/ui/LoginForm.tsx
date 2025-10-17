@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useLogin } from "../model/useLogin";
 import Image from "next/image";
 import styles from "./LoginForm.module.css";
-import { Button } from "@/shared/ui/button";
+import { Button } from "@/shared/ui/Button";
 export const LoginForm = () => {
   const { login } = useLogin();
   const [id, setId] = useState("");
@@ -39,7 +39,10 @@ export const LoginForm = () => {
           className={styles.password_input}
         />
       </div>
-      <label className={styles.login_persist}>
+      <label
+        onClick={() => setIsSaveId((prev) => !prev)}
+        className={styles.login_persist}
+      >
         <Image
           src={
             isSaveId

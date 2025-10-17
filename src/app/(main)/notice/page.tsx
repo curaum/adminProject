@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useNoticeList } from "@/entities/notice/model/useNoticeList";
 import Pagination from "@/shared/ui/Pagination";
 import { formatDateAndTime } from "@/shared/utils/dateUtil";
-import styles from "./NoticeList.module.css";
+import styles from "./NoticeListPage.module.css";
 import { getNoticeDetail } from "@/entities/notice/api/getNoticeDetail";
 export default function NoticeListPage() {
   const {

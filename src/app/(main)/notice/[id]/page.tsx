@@ -1,14 +1,14 @@
 import { NoticeDetailResponse } from "@/entities/notice/model/types";
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
-import { getNoticeDetail } from "@/entities/notice/api/getNoticeDetail";
+import styles from "./NoticeDetailPage.module.css";
+import AttachmentItem from "@/shared/ui/AttachmentItem";
+import Image from "next/image";
 async function fetchNoticeDetail(pid: string): Promise<NoticeDetailResponse> {
   const cookieStore = await cookies();
-  console.log("🍪 쿠키:", cookieStore);
   const accessToken =
     cookieStore.get("accessToken")?.value ||
     cookieStore.get("memoryToken")?.value;
-  console.log("🔑 accessToken:", accessToken);
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}api/admin/notice?pid=${pid}`,
     {
@@ -18,11 +18,13 @@ async function fetchNoticeDetail(pid: string): Promise<NoticeDetailResponse> {
       next: { revalidate: 60 },
     }
   );
+  const text = await res.text();
+  console.log("📜 Raw Response:", text);
   if (!res.ok) {
     console.error("❌ fetch 실패:", res);
     throw new Error("Failed to fetch notice detail");
   }
-  return res.json();
+  return JSON.parse(text);
 }
 
 export default async function NoticeDetailPage({
@@ -41,15 +43,60 @@ export default async function NoticeDetailPage({
   }
 
   return (
-    <main style={{ padding: 40 }}>
-      <h1>공지사항 상세 페이지</h1>
-      <p>게시글 ID: {id}</p>
-      <div dangerouslySetInnerHTML={{ __html: notice.content }} />
-      {mode === "edit" ? (
-        <p style={{ color: "green" }}>현재 편집 모드입니다 ✏️</p>
-      ) : (
-        <p style={{ color: "gray" }}>현재 상세 보기 모드입니다 👀</p>
-      )}
+    <main>
+      <div className={styles.lightgrayText}>
+        <div className={styles.container}>
+          <div className={styles.flexColumn}>
+            <div className={styles.cardRow}>
+              <div className={styles.title}>
+                <div className={styles.titleLabel}>중요</div>
+                <div className={styles.titleTextContainer}>
+                  <div className={styles.importantImage}>
+                    {notice.type === "IMPORTANT" ? (
+                      <Image
+                        src="/images/switch_enable.svg"
+                        width={52}
+                        height={32}
+                        alt="important"
+                      />
+                    ) : (
+                      <Image
+                        src="/images/switch_disable.svg"
+                        width={52}
+                        height={32}
+                        alt="unimportant"
+                      />
+                    )}
+                  </div>
+                  <div className={styles.titleLabel}>제목</div>
+                  <div className={styles.titleText}>{notice.title}</div>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.cardRow}>
+              <div>작성일시</div>
+              <div
+                className="d-flex align-center"
+                style={{ marginLeft: "8px" }}
+              >
+                <div className={styles.createdAtText}>
+                  {new Date(notice.createdAt).toLocaleString()}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            className={styles.contentBox}
+            dangerouslySetInnerHTML={{ __html: notice.content }}
+          />
+
+          {notice.attachmentList?.map((item) => (
+            <AttachmentItem key={item.url} item={item} isEn={false} />
+          ))}
+        </div>
+      </div>
     </main>
   );
 }
