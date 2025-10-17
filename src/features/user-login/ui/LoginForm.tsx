@@ -40,11 +40,13 @@ export const LoginForm = () => {
           className={styles.password_input}
         />
       </div>
-      <Check
-        value={isSaveId}
-        text="로그인 상태 유지하기"
-        onClick={() => setIsSaveId((prev) => !prev)}
-      />
+      <div style={{ color: "#7c7c7c" }}>
+        <Check
+          value={isSaveId}
+          text="로그인 상태 유지하기"
+          onClick={() => setIsSaveId((prev) => !prev)}
+        />
+      </div>
       <Button text="로그인" type="submit" disabled={!id || !pw} />
     </form>
   );

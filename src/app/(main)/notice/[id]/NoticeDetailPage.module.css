@@ -1,9 +1,6 @@
-.lightgrayText {
-  color: #999999;
-}
-
 .container {
   width: 1070px;
+  color: #3a3a3a;
 }
 
 .cardRow {
@@ -50,13 +47,12 @@
 
 .titleText {
   font-weight: 500;
-  color: #3a3a3a;
 }
 .label {
   margin-right: 8px;
+  color: #7c7c7c;
 }
 .createdAtText {
-  color: #3a3a3a;
   font-weight: 500;
 }
 
@@ -64,7 +60,6 @@
   background-color: white;
   height: 480px;
   padding: 20px;
-  color: #3a3a3a;
   margin-bottom: 20px;
 }
 .textarea {
@@ -72,7 +67,6 @@
   background-color: white;
   height: 480px;
   padding: 20px;
-  color: #3a3a3a;
   margin-bottom: 20px;
 }
 .titleInput {
@@ -84,4 +78,15 @@
 }
 .cursor {
   cursor: pointer;
+}
+
+.accessTargetList {
+  display: flex;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.factoryTarget {
+  border-right: 1px solid #dcdcdc;
+  padding-right: 16px;
 }

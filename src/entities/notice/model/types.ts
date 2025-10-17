@@ -42,6 +42,7 @@ export interface NoticeDetailResponse extends NoticeItem {
   imageList: File[];
   attachmentList: File[];
   content: string;
+  accessTargetList: string[];
 }
 
 export interface AddNoticeRequest {

@@ -35,7 +35,6 @@ export const Check = ({ value, disabled, text, onClick }: CheckProps) => {
             align-items: center;
             gap: 4px;
             font-size: 16px;
-            color: #7c7c7c;
             cursor: pointer;
           }
         `}
