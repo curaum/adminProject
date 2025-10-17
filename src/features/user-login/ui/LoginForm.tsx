@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useLogin } from "../model/useLogin";
 import Image from "next/image";
 import styles from "./LoginForm.module.css";
-import { Button } from "@/shared/ui/Button";
+import Button from "@/shared/ui/Button";
+import Check from "@/shared/ui/Check";
 export const LoginForm = () => {
   const { login } = useLogin();
   const [id, setId] = useState("");
@@ -39,22 +40,11 @@ export const LoginForm = () => {
           className={styles.password_input}
         />
       </div>
-      <label
+      <Check
+        value={isSaveId}
+        text="로그인 상태 유지하기"
         onClick={() => setIsSaveId((prev) => !prev)}
-        className={styles.login_persist}
-      >
-        <Image
-          src={
-            isSaveId
-              ? "/images/icon_check_on.png"
-              : "/images/checkbox_unselected.svg"
-          }
-          alt={isSaveId ? "Checked" : "Unchecked"}
-          width={24}
-          height={24}
-        />
-        로그인 상태 유지하기
-      </label>
+      />
       <Button text="로그인" type="submit" disabled={!id || !pw} />
     </form>
   );
