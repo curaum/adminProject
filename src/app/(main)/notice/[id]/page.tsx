@@ -1,9 +1,8 @@
 import { NoticeDetailResponse } from "@/entities/notice/model/types";
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
-import styles from "./NoticeDetailPage.module.css";
-import AttachmentItem from "@/shared/ui/AttachmentItem";
-import Image from "next/image";
+import NoticeForm from "./NoticeForm";
+import NoticeDetail from "./NoticeDetail";
 async function fetchNoticeDetail(pid: string): Promise<NoticeDetailResponse> {
   const cookieStore = await cookies();
   const accessToken =
@@ -29,11 +28,15 @@ async function fetchNoticeDetail(pid: string): Promise<NoticeDetailResponse> {
 
 export default async function NoticeDetailPage({
   params,
+  searchParams,
 }: {
-  params: { id: string; mode?: string };
+  params: { id: string };
+  searchParams: { mode?: string };
 }) {
   // Server Component이므로 params는 동기 객체로 바로 사용 가능
-  const { id, mode } = params;
+  const { id } = params;
+  const { mode } = searchParams;
+  console.log("id, mode", id, mode);
   let notice: NoticeDetailResponse | null = null;
   try {
     notice = await fetchNoticeDetail(id);
@@ -41,62 +44,9 @@ export default async function NoticeDetailPage({
     console.error(e);
     return notFound();
   }
+  if (mode === "edit") {
+    return <NoticeForm notice={notice} />;
+  }
 
-  return (
-    <main>
-      <div className={styles.lightgrayText}>
-        <div className={styles.container}>
-          <div className={styles.flexColumn}>
-            <div className={styles.cardRow}>
-              <div className={styles.title}>
-                <div className={styles.titleLabel}>중요</div>
-                <div className={styles.titleTextContainer}>
-                  <div className={styles.importantImage}>
-                    {notice.type === "IMPORTANT" ? (
-                      <Image
-                        src="/images/switch_enable.svg"
-                        width={52}
-                        height={32}
-                        alt="important"
-                      />
-                    ) : (
-                      <Image
-                        src="/images/switch_disable.svg"
-                        width={52}
-                        height={32}
-                        alt="unimportant"
-                      />
-                    )}
-                  </div>
-                  <div className={styles.titleLabel}>제목</div>
-                  <div className={styles.titleText}>{notice.title}</div>
-                </div>
-              </div>
-            </div>
-
-            <div className={styles.cardRow}>
-              <div>작성일시</div>
-              <div
-                className="d-flex align-center"
-                style={{ marginLeft: "8px" }}
-              >
-                <div className={styles.createdAtText}>
-                  {new Date(notice.createdAt).toLocaleString()}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div
-            className={styles.contentBox}
-            dangerouslySetInnerHTML={{ __html: notice.content }}
-          />
-
-          {notice.attachmentList?.map((item) => (
-            <AttachmentItem key={item.url} item={item} isEn={false} />
-          ))}
-        </div>
-      </div>
-    </main>
-  );
+  return <NoticeDetail notice={notice} />;
 }
