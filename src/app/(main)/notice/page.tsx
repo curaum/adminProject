@@ -6,6 +6,7 @@ import { useNoticeList } from "@/entities/notice/model/useNoticeList";
 import Pagination from "@/shared/ui/Pagination";
 import { formatDateAndTime } from "@/shared/utils/dateUtil";
 import styles from "./NoticeListPage.module.css";
+import { useToast } from "@/shared/utils/ToastContext";
 export default function NoticeListPage() {
   const {
     notices,
@@ -15,6 +16,7 @@ export default function NoticeListPage() {
     error,
     fetchNoticeList,
   } = useNoticeList();
+  const { showToast } = useToast();
   const [page, setPage] = useState(0);
   const pageSize = 20;
   const handlePageChange = (newPage: number) => {
@@ -46,6 +48,9 @@ export default function NoticeListPage() {
 
   return (
     <div className={styles.container}>
+      {/* <button onClick={() => showToast("작업이 완료되었습니다!")}>
+        토스트 띄우기
+      </button> */}
       <div className={styles.headerRow}>
         <div className={styles.headerBox}>
           <div className={styles.titleHeader}>제목</div>
