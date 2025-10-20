@@ -19,12 +19,7 @@ export default function NoticeForm({
 }) {
   const [title, setTitle] = useState(notice.title);
   const [content, setContent] = useState(notice.content);
-  const accessTargetList = [
-    { key: "FACTORY", label: "제조소", value: true },
-    { key: "PARTNER", label: "파트너", value: true },
-    { key: "PARTNER_KO", label: "국내", value: true },
-    { key: "PARTNER_EN", label: "해외", value: true },
-  ];
+
   const getTargetValue = (target: string): boolean => {
     if (target === "PARTNER") {
       return (
@@ -35,6 +30,48 @@ export default function NoticeForm({
       return notice.accessTargetList.includes(target);
     }
   };
+  const initialAccessTargetList = [
+    { key: "FACTORY", label: "제조소", value: getTargetValue("FACTORY") },
+    { key: "PARTNER", label: "파트너", value: getTargetValue("PARTNER") },
+    { key: "PARTNER_KO", label: "국내", value: getTargetValue("PARTNER_KO") },
+    { key: "PARTNER_EN", label: "해외", value: getTargetValue("PARTNER_EN") },
+  ];
+  const [accessTargetList, setAccessTargetList] = useState(
+    initialAccessTargetList
+  );
+
+  const handleChangeAccessTargetValue = (key: string, value: boolean) => {
+    setAccessTargetList((list) => {
+      let updatedList = list.map((item) => {
+        if (item.key === key) {
+          return { ...item, value: !value };
+        }
+        return item;
+      });
+
+      // PARTNER 키 관련 로직
+      if (key === "PARTNER") {
+        // PARTNER 클릭 시 PARTNER_KO, PARTNER_EN 값도 동일하게
+        updatedList = updatedList.map((item) => {
+          if (item.key === "PARTNER_KO" || item.key === "PARTNER_EN") {
+            return { ...item, value: !value };
+          }
+          return item;
+        });
+      } else if (key === "PARTNER_KO" || key === "PARTNER_EN") {
+        // PARTNER_KO 또는 PARTNER_EN 클릭 시 PARTNER 값 갱신
+        const partnerValue =
+          updatedList.find((i) => i.key === "PARTNER_KO")?.value &&
+          updatedList.find((i) => i.key === "PARTNER_EN")?.value;
+        updatedList = updatedList.map((item) =>
+          item.key === "PARTNER" ? { ...item, value: partnerValue } : item
+        );
+      }
+
+      return updatedList;
+    });
+  };
+
   const { fetchUpdateNotice, success } = useUpdateNotice();
 
   const handleSave = (notice: NoticeDetailResponse) => {
@@ -113,7 +150,13 @@ export default function NoticeForm({
                 }
                 style={{ marginLeft: target.key === "PARTNER" ? "8px" : 0 }}
               >
-                <Check value={getTargetValue(target.key)} text={target.label} />
+                <Check
+                  value={target.value}
+                  text={target.label}
+                  onChangeValue={() =>
+                    handleChangeAccessTargetValue(target.key, target.value)
+                  }
+                />
               </div>
             ))}
           </div>
@@ -131,7 +174,7 @@ export default function NoticeForm({
 
         {/* 첨부파일 */}
         {notice.attachmentList?.map((item) => (
-          <AttachmentItem key={item.url} item={item} isEn={false} />
+          <AttachmentItem key={item.url} item={item} />
         ))}
       </div>
       <BottomNavBar

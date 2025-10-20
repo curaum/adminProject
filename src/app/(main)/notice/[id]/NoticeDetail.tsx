@@ -93,7 +93,7 @@ export default function NoticeDetail({
 
       {/* 첨부파일 */}
       {notice.attachmentList?.map((item) => (
-        <AttachmentItem key={item.url} item={item} isEn={false} />
+        <AttachmentItem key={item.url} item={item} />
       ))}
       <BottomNavBar
         buttons={[

@@ -6,20 +6,20 @@ interface CheckProps {
   value: boolean;
   disabled?: boolean;
   text?: string;
-  onClick?: () => void;
+  onChangeValue?: () => void;
 }
 
-export const Check = ({ value, disabled, text, onClick }: CheckProps) => {
+export const Check = ({ value, disabled, text, onChangeValue }: CheckProps) => {
   return (
     <>
       <label
-        onClick={!disabled ? onClick : undefined}
+        onClick={!disabled ? onChangeValue : undefined}
         className="checkContainer"
       >
         <Image
           src={
             value
-              ? "/images/icon_check_on.png"
+              ? "/images/checkbox_selected.svg"
               : "/images/checkbox_unselected.svg"
           }
           alt={value ? "Checked" : "Unchecked"}
