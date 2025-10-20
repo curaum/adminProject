@@ -6,11 +6,13 @@ import Image from "next/image";
 import Check from "@/shared/ui/Check";
 import BottomNavBar from "@/shared/ui/BottomNavBar";
 import { useRouter } from "next/navigation";
+import { useNoticeDelete } from "@/entities/notice/model/useNoticeDelete";
 export default function NoticeDetail({
   notice,
 }: {
   notice: NoticeDetailResponse;
 }) {
+  const { handleDeleteNotice, loading } = useNoticeDelete();
   const router = useRouter();
   const accessTargetList = [
     { key: "FACTORY", label: "제조소", value: true },
@@ -28,12 +30,7 @@ export default function NoticeDetail({
       return notice.accessTargetList.includes(target);
     }
   };
-  const handleDelete = async () => {
-    if (confirm("삭제하시겠습니까?")) {
-      await fetch(`/api/notice/${notice.pid}`, { method: "DELETE" });
-      router.push("/notice");
-    }
-  };
+
   return (
     <div className={styles.container}>
       {/* 제목 */}
@@ -103,7 +100,7 @@ export default function NoticeDetail({
           {
             id: "delete",
             label: "공지 삭제",
-            onClick: handleDelete,
+            onClick: () => handleDeleteNotice(notice.pid),
             activeStyle: { borderColor: "#FC5B54", color: "#FC5B54" },
           },
           {

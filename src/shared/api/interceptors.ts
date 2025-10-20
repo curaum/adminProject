@@ -1,6 +1,7 @@
 "use client";
 import axios, {
   AxiosError,
+  AxiosHeaders,
   AxiosInstance,
   AxiosRequestConfig,
   AxiosResponse,
@@ -9,6 +10,14 @@ import axios, {
 import { setCookie } from "../lib/cookies";
 import { apiClient } from "./index";
 import { redirect } from "next/navigation";
+
+interface ErrorResponse {
+  timestamp: string;
+  status: number;
+  error: string;
+  message: string;
+  path: string;
+}
 
 let alertShown = false;
 export function getCookie(name: string) {
@@ -31,16 +40,12 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-    const accessToken = getCookie("accessToken");
-    const memoryToken = getCookie("memoryToken");
-    console.log("요청 accessToken:", accessToken, memoryToken);
-
-    if (accessToken) {
-      config.headers.Authorization = "Bearer " + accessToken;
-    } else if (memoryToken) {
-      config.headers.Authorization = "Bearer " + memoryToken;
+    const accessToken = getCookie("memoryToken");
+    console.log("요청 accessToken", accessToken);
+    if (accessToken && config.headers) {
+      config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
-    console.log("요청 헤더:", config.headers);
+
     return config;
   },
   function (error: AxiosError): Promise<AxiosError> {
@@ -61,8 +66,8 @@ apiClient.interceptors.response.use(
   },
   async function (error: AxiosError): Promise<AxiosError> {
     const response = error.response as AxiosResponse<any> | undefined;
-
-    if (response?.data?.status === 403) {
+    console.log("error response", response);
+    if (response?.status === 401 || response?.status === 403) {
       const result = await accessTokenRefresh();
       if (result.status === 200) {
         const newToken = getCookie("accessToken");
@@ -93,6 +98,7 @@ apiClient.interceptors.response.use(
   }
 );
 export async function accessTokenRefresh() {
+  console.log("accessTokenRefresh");
   try {
     const token = getCookie("accessToken") || getCookie("memoryToken"); // accessToken이 없으면 memoryToken 사용
     const response = await axios.post(
@@ -102,7 +108,6 @@ export async function accessTokenRefresh() {
         withCredentials: true, // 쿠키 포함 설정
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
-
           Authorization: `Bearer ${token}`, // accessToken을 헤더에 추가
         },
       }
