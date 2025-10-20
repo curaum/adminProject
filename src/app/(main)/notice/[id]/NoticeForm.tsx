@@ -19,7 +19,23 @@ export default function NoticeForm({
 }) {
   const [title, setTitle] = useState(notice.title);
   const [content, setContent] = useState(notice.content);
-
+  const [type, setType] = useState(notice.type);
+  const [imageList, setImageList] = useState(
+    notice.imageList.map((item) => ({
+      realName: item.realName,
+      virtualName: item.virtualName,
+      contentType: item.contentType,
+      fileSize: item.fileSize,
+    }))
+  );
+  const [attachmentList, setAttachmentList] = useState(
+    notice.attachmentList.map((item) => ({
+      realName: item.realName,
+      virtualName: item.virtualName,
+      contentType: item.contentType,
+      fileSize: item.fileSize,
+    }))
+  );
   const getTargetValue = (target: string): boolean => {
     if (target === "PARTNER") {
       return (
@@ -77,22 +93,12 @@ export default function NoticeForm({
   const handleSave = (notice: NoticeDetailResponse) => {
     const body = {
       pid: notice.pid,
-      title: title,
-      content: content,
-      type: notice.type,
-      accessTargetList: notice.accessTargetList,
-      imageFileDTOList: notice.imageList.map((item) => ({
-        realName: item.realName,
-        virtualName: item.virtualName,
-        contentType: item.contentType,
-        fileSize: item.fileSize,
-      })),
-      attachmentFileDTOList: notice.attachmentList.map((item) => ({
-        realName: item.realName,
-        virtualName: item.virtualName,
-        contentType: item.contentType,
-        fileSize: item.fileSize,
-      })),
+      title,
+      content,
+      type,
+      accessTargetList,
+      imageFileDTOList: imageList,
+      attachmentFileDTOList: attachmentList,
     };
     fetchUpdateNotice(body);
     // TODO: PUT /api/admin/notice API 호출
