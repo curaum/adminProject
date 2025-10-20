@@ -55,7 +55,7 @@ export const BottomNavBar = ({
             width: 100%;
             height: 72px;
             background: white;
-            border-top: 1px solid #eaeaea;
+            box-shadow: 0 -2px 4px 0 rgba(0, 0, 0, 0.08);
             padding: 8px 40px;
             gap: 16px;
           }

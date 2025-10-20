@@ -9,7 +9,12 @@ import Image from "@tiptap/extension-image";
 import { useRef, useState } from "react";
 import { useClickOutside } from "@/shared/utils/useClickOutside";
 
-const Tiptap = () => {
+interface TiptapProps {
+  content: string;
+  onChange: (value: string) => void;
+}
+
+const Tiptap = ({ content, onChange }: TiptapProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const [showAlignOptions, setShowAlignOptions] = useState(false);
@@ -29,7 +34,10 @@ const Tiptap = () => {
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       Image,
     ],
-    content: "<p>Hello World! 🌎️</p>",
+    content,
+    onUpdate({ editor }) {
+      onChange(editor.getHTML());
+    },
     immediatelyRender: false,
   });
   const editorState = useEditorState({

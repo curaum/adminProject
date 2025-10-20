@@ -5,6 +5,8 @@ import { useState } from "react";
 import styles from "./NoticeDetailPage.module.css";
 import Image from "next/image";
 import AttachmentItem from "@/shared/ui/AttachmentItem";
+import Tiptap from "@/features/create-notice/ui/TipTap";
+import BottomNavBar from "@/shared/ui/BottomNavBar";
 export default function NoticeForm({
   notice,
 }: {
@@ -13,7 +15,7 @@ export default function NoticeForm({
   const [title, setTitle] = useState(notice.title);
   const [content, setContent] = useState(notice.content);
 
-  const handleSave = () => {
+  const handleSave = (pid: string | number) => {
     console.log("저장할 데이터:", { title, content });
     // TODO: PUT /api/admin/notice API 호출
   };
@@ -60,6 +62,9 @@ export default function NoticeForm({
         </div>
 
         {/* 내용 */}
+        <div className={styles.textarea}>
+          <Tiptap content={content} onChange={(val) => setContent(val)} />
+        </div>
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
@@ -71,6 +76,17 @@ export default function NoticeForm({
           <AttachmentItem key={item.url} item={item} isEn={false} />
         ))}
       </div>
+      <BottomNavBar
+        buttons={[
+          {
+            id: "create",
+            label: "공지 등록",
+            onClick: () => handleSave(notice.pid),
+            activeStyle: { backgroundColor: "#51c37e", color: "#fff" },
+            inactiveStyle: { backgroundColor: "#F5F7F7", color: "#7c7c7c" },
+          },
+        ]}
+      />
     </div>
   );
 }
