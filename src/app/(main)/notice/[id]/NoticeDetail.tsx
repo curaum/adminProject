@@ -59,7 +59,7 @@ export default function NoticeDetail({
         </div>{" "}
       </div>
 
-      {/* 작성일 */}
+      {/* 공지 대상 */}
       <div className={styles.cardRow}>
         <div className={styles.label}>공지 대상</div>
         <div className={styles.accessTargetList}>
@@ -77,7 +77,7 @@ export default function NoticeDetail({
         </div>
       </div>
 
-      {/* 공지 대상 */}
+      {/* 작성일시 */}
       <div className={styles.cardRow}>
         <div className={styles.label}>작성일시</div>
         <div className={styles.createdAtText}>

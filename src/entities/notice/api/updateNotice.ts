@@ -1,22 +1,7 @@
 import { apiClient } from "@/shared/api";
 import { AxiosResponse } from "axios";
 
-export interface FileDTO {
-  realName: string;
-  virtualName: string;
-  contentType: string;
-  fileSize: number;
-}
-
-export interface UpdateNoticeRequest {
-  pid: number;
-  title: string;
-  content: string;
-  type: "IMPORTANT" | "NORMAL";
-  accessTargetList: string[]; // ["PARTNER_KO", "FACTORY"] 형태
-  imageFileDTOList?: FileDTO[];
-  attachmentFileDTOList?: FileDTO[];
-}
+import { UpdateNoticeRequest } from "../model/types";
 
 export async function updateNotice(
   data: UpdateNoticeRequest

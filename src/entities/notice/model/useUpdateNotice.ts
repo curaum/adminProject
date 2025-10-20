@@ -2,11 +2,8 @@
 
 import { useState, useCallback } from "react";
 import { AxiosError } from "axios";
-import {
-  updateNotice,
-  UpdateNoticeRequest,
-} from "@/entities/notice/api/updateNotice";
-
+import { updateNotice } from "@/entities/notice/api/updateNotice";
+import { UpdateNoticeRequest } from "./types";
 export function useUpdateNotice() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<AxiosError | null>(null);

@@ -3,7 +3,7 @@
 export interface NoticeItem {
   pid: number;
   title: string;
-  type: string;
+  type: "IMPORTANT" | "NORMAL";
   createdAt: string; // ISO 날짜 문자열
   modifiedAt: string; // ISO 날짜 문자열
   createdBy: number;
@@ -48,10 +48,19 @@ export interface NoticeDetailResponse extends NoticeItem {
 export interface AddNoticeRequest {
   title: string;
   content: string;
-  type: string;
-  accessTarget: string;
-  imageUrlList?: string[];
-  attachmentUrlList?: string[];
+  type: "IMPORTANT" | "NORMAL";
+  accessTargetList: string[];
+  imageFileDTOList?: string[];
+  attachmentFileDTOList?: string[];
+}
+export interface UpdateNoticeRequest {
+  pid: string | number;
+  title: string;
+  content: string;
+  type: "IMPORTANT" | "NORMAL";
+  accessTargetList: string[];
+  imageFileDTOList?: FileDTO[];
+  attachmentFileDTOList?: FileDTO[];
 }
 
 export interface AddNoticeResponse {
@@ -69,7 +78,12 @@ export interface UploadFileResponse {
   realName: string;
   url: string;
 }
-
+export interface FileDTO {
+  realName: string;
+  virtualName: string;
+  contentType: string;
+  fileSize: number;
+}
 export interface File {
   filePid: number;
   realName: string;
