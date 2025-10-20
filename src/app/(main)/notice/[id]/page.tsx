@@ -18,7 +18,6 @@ async function fetchNoticeDetail(pid: string): Promise<NoticeDetailResponse> {
     }
   );
   const text = await res.text();
-  console.log("📜 Raw Response:", text);
   if (!res.ok) {
     console.error("❌ fetch 실패:", res);
     throw new Error("Failed to fetch notice detail");
@@ -36,7 +35,6 @@ export default async function NoticeDetailPage({
   // Server Component이므로 params는 동기 객체로 바로 사용 가능
   const { id } = params;
   const { mode } = searchParams;
-  console.log("id, mode", id, mode);
   let notice: NoticeDetailResponse | null = null;
   try {
     notice = await fetchNoticeDetail(id);

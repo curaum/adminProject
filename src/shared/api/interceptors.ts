@@ -7,10 +7,8 @@ import axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios";
-import { setCookie } from "../lib/cookies";
-import { apiClient } from "./index";
+import { setCookie, getCookie } from "../lib/cookies";
 import { redirect } from "next/navigation";
-
 interface ErrorResponse {
   timestamp: string;
   status: number;
@@ -20,87 +18,78 @@ interface ErrorResponse {
 }
 
 let alertShown = false;
-export function getCookie(name: string) {
-  if (typeof document === "undefined") return null;
-
-  const nameEQ = name + "=";
-  const ca = document.cookie.split(";");
-  for (let i = 0; i < ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) === " ") c = c.substring(1, c.length);
-    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-  }
-  console.log("쿠키 없음:", name);
-  return null;
-}
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 // 요청 인터셉터
+export function setInterceptors(apiClient: AxiosInstance) {
+  apiClient.interceptors.request.use(
+    (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
+      const accessToken = getCookie("accessToken") || getCookie("memoryToken");
 
-apiClient.interceptors.request.use(
-  (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-    const accessToken = getCookie("memoryToken");
-    console.log("요청 accessToken", accessToken);
-    if (accessToken && config.headers) {
-      config.headers["Authorization"] = `Bearer ${accessToken}`;
-    }
-
-    return config;
-  },
-  function (error: AxiosError): Promise<AxiosError> {
-    return Promise.reject(error);
-  }
-);
-
-// 응답 인터셉터
-apiClient.interceptors.response.use(
-  (response: AxiosResponse): AxiosResponse => {
-    const accessToken = getCookie("accessToken");
-    console.log("응답 accessToken:", accessToken);
-    if (accessToken) {
-      setCookie("memoryToken", accessToken);
-    }
-
-    return response;
-  },
-  async function (error: AxiosError): Promise<AxiosError> {
-    const response = error.response as AxiosResponse<any> | undefined;
-    console.log("error response", response);
-    if (response?.status === 401 || response?.status === 403) {
-      const result = await accessTokenRefresh();
-      if (result.status === 200) {
-        const newToken = getCookie("accessToken");
-        if (newToken) {
-          error.config.headers.Authorization = "Bearer " + newToken;
-          return apiClient(error.config);
-        }
+      console.log("요청 accessToken", accessToken);
+      console.log("요청 config headers", config.headers);
+      if (accessToken && config.headers) {
+        config.headers["Authorization"] = `Bearer ${accessToken}`;
       }
-    } else if (response?.data) {
-      if (!alertShown) {
-        alertShown = true;
-        const { code, message } = response.data;
 
-        if (
-          code === "CANNOT_DELETE_MAPPING_TEMP" ||
-          code === "DUPLICATE_NICKNAME"
-        ) {
-          console.warn(message);
-        } else {
-          alert(message);
-        }
+      return config;
+    },
+    function (error: AxiosError): Promise<AxiosError> {
+      return Promise.reject(error);
+    }
+  );
+
+  // 응답 인터셉터
+  apiClient.interceptors.response.use(
+    (response: AxiosResponse): AxiosResponse => {
+      const accessToken = getCookie("accessToken");
+      console.log("응답 accessToken:", accessToken);
+      if (accessToken) {
+        setCookie("memoryToken", accessToken);
       }
 
       return response;
-    }
+    },
+    async function (error: AxiosError): Promise<AxiosError> {
+      const response = error.response as AxiosResponse<any> | undefined;
+      console.log("error response", response);
+      if (response?.status === 401 || response?.status === 403) {
+        const result = await accessTokenRefresh();
+        if (result.status === 200) {
+          const newToken = getCookie("accessToken");
+          if (newToken) {
+            error.config.headers.Authorization = "Bearer " + newToken;
+            return apiClient(error.config);
+          }
+        }
+      } else if (response?.data) {
+        if (!alertShown) {
+          alertShown = true;
+          const { code, message } = response.data;
 
-    return Promise.reject(error);
-  }
-);
+          if (
+            code === "CANNOT_DELETE_MAPPING_TEMP" ||
+            code === "DUPLICATE_NICKNAME"
+          ) {
+            console.warn(message);
+          } else {
+            alert(message);
+          }
+        }
+
+        return response;
+      }
+
+      return Promise.reject(error);
+    }
+  );
+}
 export async function accessTokenRefresh() {
   console.log("accessTokenRefresh");
   try {
     const token = getCookie("accessToken") || getCookie("memoryToken"); // accessToken이 없으면 memoryToken 사용
+
     const response = await axios.post(
       `${BASE_URL}api/admin/user/token/refresh`,
       {}, // 요청 body가 필요하지 않다면 빈 객체 전달

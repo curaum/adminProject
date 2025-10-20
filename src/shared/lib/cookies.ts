@@ -9,3 +9,15 @@ export function setCookie(name: string, value: string, days?: number) {
   }
   document.cookie = name + "=" + (value || "") + expires + "; path=/";
 }
+
+export function getCookie(name: string) {
+  if (typeof document === "undefined") return null; // SSR 보호
+
+  const cookies = document.cookie.split(";").map((c) => c.trim());
+  const target = cookies.find((c) => c.startsWith(name + "="));
+  if (!target) {
+    console.log("쿠키 없음:", name);
+    return null;
+  }
+  return target.substring(name.length + 1);
+}

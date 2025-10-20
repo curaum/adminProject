@@ -1,5 +1,4 @@
 "use client";
-import "@/shared/api/interceptors";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useNoticeList } from "@/entities/notice/model/useNoticeList";
