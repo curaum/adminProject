@@ -13,7 +13,6 @@ ol li p {
 }
 
 .tiptap-container {
-  max-width: 700px;
   margin: 20px auto;
   font-family: Arial, sans-serif;
 }
@@ -21,23 +20,21 @@ ol li p {
 .toolbar {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 8px;
   margin-bottom: 10px;
 }
 
 .toolbar button {
-  padding: 5px 10px;
-  border: 1px solid #ccc;
   background: white;
   cursor: pointer;
-  font-weight: bold;
-  border-radius: 4px;
+  width: 24px;
+  height: 24px;
 }
 
 .toolbar button.active {
-  background: #0070f3;
+  background: #7c7c7c;
   color: white;
-  border-color: #0070f3;
+  border-color: #7c7c7c;
 }
 
 .toolbar button:hover {
@@ -45,10 +42,10 @@ ol li p {
 }
 
 .editor {
-  border: 1px solid #ccc;
+  border: 1px solid #e5e5e5;
   padding: 10px;
   border-radius: 4px;
-  min-height: 200px;
+  min-height: 440px;
 }
 .editor > div:focus-visible {
   border: none; /* 테두리 제거 */
@@ -81,10 +78,6 @@ blockquote {
   cursor: pointer;
 }
 
-.align-options button.active {
-  background-color: #0070f3;
-  color: white;
-}
 .heading-dropdown button {
   padding: 5px 10px;
   border: 1px solid #ccc;
