@@ -17,9 +17,11 @@ export function useUpdateNotice() {
     try {
       await updateNotice(data);
       setSuccess(true);
+      return true;
     } catch (err) {
       setError(err as AxiosError);
       setSuccess(false);
+      return false;
     } finally {
       setLoading(false);
     }

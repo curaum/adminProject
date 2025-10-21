@@ -14,11 +14,15 @@ import Check from "@/shared/ui/Check";
 import ToggleButton from "@/shared/ui/ToggleButton";
 import AttachmentUploader from "@/shared/ui/AttachmentUploader";
 import { uploadFile } from "@/shared/api/uploadFile";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/shared/utils/ToastContext";
 export default function NoticeForm({
   notice,
 }: {
   notice: NoticeDetailResponse;
 }) {
+  const router = useRouter();
+  const { showToast } = useToast();
   const [title, setTitle] = useState(notice.title);
   const [content, setContent] = useState(notice.content);
   const [type, setType] = useState(notice.type);
@@ -55,9 +59,7 @@ export default function NoticeForm({
   const handleDeleteFile = (idx: number) => {
     setAttachmentList((prev) => prev.filter((_, i) => i !== idx));
   };
-  useEffect(() => {
-    console.log("attachmentList", attachmentList);
-  }, [attachmentList]);
+
   const handleChangeAccessTargetValue = (key: string, value: boolean) => {
     setAccessTargetList((prev) => {
       const next = new Set(prev);
@@ -86,7 +88,7 @@ export default function NoticeForm({
 
   const { fetchUpdateNotice, success } = useUpdateNotice();
 
-  const handleSave = (notice: UpdateNoticeRequest) => {
+  const handleSave = async (notice: UpdateNoticeRequest) => {
     const body = {
       pid: notice.pid,
       title,
@@ -106,8 +108,11 @@ export default function NoticeForm({
         fileSize: item.fileSize,
       })),
     };
-    fetchUpdateNotice(body);
-    // TODO: PUT /api/admin/notice API 호출
+    const result = await fetchUpdateNotice(body);
+    if (result) {
+      showToast("공지 등록이 완료되었습니다.");
+      router.push(`/notice/${notice.pid}`);
+    }
   };
 
   return (

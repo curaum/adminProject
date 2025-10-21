@@ -33,13 +33,6 @@ export default function AttachmentUploader({
     onAddFile?.(selectedFile);
   };
 
-  // const handleDeleteFile = (index: number) => {
-  //   const updatedList = [...fileList];
-  //   // index번 에서 1개 요소 제거
-  //   updatedList.splice(index, 1);
-  //   setFileList(updatedList);
-  //   onAddFile?.(updatedList);
-  // };
   const handleClickButton = () => {
     fileInputRef.current?.click();
   };
