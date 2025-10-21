@@ -1,4 +1,4 @@
-ul,
+/* ul,
 ol {
   padding: 0 1rem;
   margin: 1.25rem 1rem 1.25rem 0.4rem;
@@ -7,12 +7,12 @@ ul,
 ol li p {
   margin-top: 0.25em;
   margin-bottom: 0.25em;
-}
+} */
 .editor li {
   margin-bottom: 4px; /* 리스트 항목 간격 */
 }
 
-.tiptap-container {
+.tiptap_container {
   margin: 20px auto;
   font-family: Arial, sans-serif;
 }
@@ -56,10 +56,7 @@ ol li p {
 .editor > div {
   height: 100%;
 }
-blockquote {
-  margin-left: 40px; /* 기본 들여쓰기 */
-  margin-right: 0;
-}
+
 .align-dropdown button {
   padding: 5px 10px;
   border: 1px solid #ccc;
@@ -79,20 +76,21 @@ blockquote {
   cursor: pointer;
 }
 
-.fontSize-dropdown button {
+.fontSize_dropdown button {
   display: flex;
   justify-content: space-between;
-  padding: 0 6px;
-  border: 1px solid #ccc;
+  align-items: center;
+  padding: 0 6px 0 10px;
+  border: 1px solid #e5e5e5;
   background: white;
   cursor: pointer;
   border-radius: 4px;
-  font-weight: bold;
+  font-weight: 500;
   width: 120px;
   height: 40px;
 }
 
-.fontSize-options button {
+.fontSize_options button {
   display: block;
   width: 100%;
   padding: 5px 10px;
@@ -102,7 +100,7 @@ blockquote {
   cursor: pointer;
 }
 
-.fontSize-options button.active {
+.fontSize_options button.active {
   background-color: #0070f3;
   color: white;
 }
@@ -111,4 +109,10 @@ blockquote {
   width: 1px;
   height: 16px;
   background-color: #d9d9d9;
+}
+
+.fontColor_container {
+  position: "relative";
+  display: flex;
+  gap: 4px;
 }

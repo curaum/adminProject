@@ -2,14 +2,14 @@
 
 import { useEditor, EditorContent, useEditorState } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import "./Tiptap.css";
+import styles from "./Tiptap.module.css";
 import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
 import Image from "@tiptap/extension-image";
 import { TextStyle, Color, FontSize } from "@tiptap/extension-text-style";
 import { useRef, useState } from "react";
 import { useClickOutside } from "@/shared/utils/useClickOutside";
-
+import NextImage from "next/image";
 interface TiptapProps {
   content: string;
   onChange: (value: string) => void;
@@ -58,7 +58,6 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
   };
 
   const imageInputRef = useRef<HTMLInputElement | null>(null);
-  const [showAlignOptions, setShowAlignOptions] = useState(false);
   const [showFontSizeOptions, setShowFontSizeOptions] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -66,7 +65,6 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
 
   // 바깥 클릭 시 드롭다운 닫기
   useClickOutside(dropdownRef, () => setShowFontSizeOptions(false));
-  useClickOutside(dropdownAlignRef, () => setShowAlignOptions(false));
 
   const editor = useEditor({
     extensions: [
@@ -121,23 +119,31 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
     if (imageInputRef.current) imageInputRef.current.value = "";
   };
   return (
-    <div className="tiptap-container">
+    <div className={styles.tiptap_container}>
       {/* 툴바 */}
-      <div className="toolbar">
+      <div className={styles.toolbar}>
         {/* 폰트 크기 */}
         <div
           ref={dropdownRef}
-          className="fontSize-dropdown"
+          className={styles.fontSize_dropdown}
           style={{ position: "relative", display: "inline-block" }}
         >
-          <button onClick={() => setShowFontSizeOptions((prev) => !prev)}>
+          <button
+            className={styles.button}
+            onClick={() => setShowFontSizeOptions((prev) => !prev)}
+          >
             <span>{selectedLabel}</span>
-            <span>▼</span>
+            <NextImage
+              src={"/images/icon_toggle.svg"}
+              alt="toggle"
+              width={12}
+              height={6}
+            />
           </button>
 
           {showFontSizeOptions && (
             <div
-              className="fontSize-options"
+              className={styles.fontSize_options}
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -159,9 +165,9 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
             </div>
           )}
         </div>
-        <div className="bar"></div>
+        <div className={styles.bar}></div>
         {/* 폰트 색상 */}
-        <div style={{ position: "relative" }}>
+        <div className={styles.fontColor_container}>
           <button
             style={{
               padding: "4px 8px",
@@ -172,7 +178,13 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
             }}
             onClick={() => setIsPaletteOpen((prev) => !prev)}
           ></button>
-          ▼{/* 팔레트 드롭다운 */}
+          <NextImage
+            src={"/images/icon_toggle.svg"}
+            alt="toggle"
+            width={12}
+            height={6}
+          />
+          {/* 팔레트 드롭다운 */}
           {isPaletteOpen && (
             <div
               style={{
@@ -220,43 +232,13 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
             </div>
           )}
         </div>
-        <button onClick={() => imageInputRef.current?.click()}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M4 17L9 10L13 16L16 13L20 17"
-              stroke="#3A3A3A"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M4 20V4H20V20H4Z"
-              stroke="#3A3A3A"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <circle cx="15.5" cy="8.5" r="1.5" fill="#3A3A3A" />
-          </svg>
-        </button>
-        <input
-          type="file"
-          accept="image/*"
-          ref={imageInputRef}
-          style={{ display: "none" }}
-          onChange={addImageFromFile}
-        />
 
-        {/* 텍스트 스타일 */}
+        {/* 볼드 */}
         <button
           onClick={() => editor.chain().focus().toggleBold().run()}
-          className={editorState.isBold ? "active" : ""}
+          className={`${styles.button} ${
+            editorState?.isBold ? styles.active : ""
+          }`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -271,9 +253,12 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
             />
           </svg>
         </button>
+        {/* 이탤릭 */}
         <button
           onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={editorState?.isItalic ? "active" : ""}
+          className={`${styles.button} ${
+            editorState?.isItalic ? styles.active : ""
+          }`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -296,9 +281,12 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
             />
           </svg>
         </button>
+        {/* 밑줄 */}
         <button
           onClick={() => editor.chain().focus().toggleUnderline().run()}
-          className={editor.isActive("underline") ? "active" : ""}
+          className={`${styles.button} ${
+            editor.isActive("underline") ? styles.active : ""
+          }`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -317,9 +305,12 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
             />
           </svg>
         </button>
+        {/* 취소선 */}
         <button
           onClick={() => editor.chain().focus().toggleStrike().run()}
-          className={editorState?.isStrike ? "active" : ""}
+          className={`${styles.button} ${
+            editorState?.isStrike ? styles.active : ""
+          }`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -341,14 +332,15 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
             />
           </svg>
         </button>
+        <div className={styles.bar}></div>
 
         {/* 정렬 */}
+        {/* 왼쪽 */}
         <button
-          onClick={() => {
-            editor.chain().focus().setTextAlign("left").run();
-            setShowAlignOptions(false);
-          }}
-          className={editorState.isLeft ? "active" : ""}
+          onClick={() => editor.chain().focus().setTextAlign("left").run()}
+          className={`${styles.button} ${
+            editorState?.isLeft ? styles.active : ""
+          }`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -387,12 +379,12 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
             />
           </svg>{" "}
         </button>
+        {/* 중앙 */}
         <button
-          onClick={() => {
-            editor.chain().focus().setTextAlign("center").run();
-            setShowAlignOptions(false);
-          }}
-          className={editorState.isCenter ? "active" : ""}
+          onClick={() => editor.chain().focus().setTextAlign("center").run()}
+          className={`${styles.button} ${
+            editorState?.isCenter ? styles.active : ""
+          }`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -431,12 +423,12 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
             />
           </svg>
         </button>
+        {/* 오른쪽 */}
         <button
-          onClick={() => {
-            editor.chain().focus().setTextAlign("right").run();
-            setShowAlignOptions(false);
-          }}
-          className={editorState.isRight ? "active" : ""}
+          onClick={() => editor.chain().focus().setTextAlign("right").run()}
+          className={`${styles.button} ${
+            editorState?.isRight ? styles.active : ""
+          }`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -475,12 +467,12 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
             />
           </svg>
         </button>
+        {/* 양방향 */}
         <button
-          onClick={() => {
-            editor.chain().focus().setTextAlign("justify").run();
-            setShowAlignOptions(false);
-          }}
-          className={editorState.isJustify ? "active" : ""}
+          onClick={() => editor.chain().focus().setTextAlign("justify").run()}
+          className={`${styles.button} ${
+            editorState?.isJustify ? styles.active : ""
+          }`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -519,6 +511,91 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
             />
           </svg>
         </button>
+        {/* 점 리스트 */}
+        <button
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+          className={`${styles.button} ${
+            editor.isActive("bulletList") ? styles.active : ""
+          }`}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M10 5H20"
+              stroke="#3A3A3A"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M10 12H20"
+              stroke="#3A3A3A"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M10 19H20"
+              stroke="#3A3A3A"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <circle cx="5" cy="19" r="2" fill="#3A3A3A" />
+            <circle cx="5" cy="12" r="2" fill="#3A3A3A" />
+            <circle cx="5" cy="5" r="2" fill="#3A3A3A" />
+          </svg>{" "}
+        </button>
+        {/* 숫자 리스트 */}
+        <button
+          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+          className={`${styles.button} ${
+            editor.isActive("orderedList") ? styles.active : ""
+          }`}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M10 8H20"
+              stroke="#3A3A3A"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M10 17H20"
+              stroke="#3A3A3A"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M4 6L5.5 5V10"
+              stroke="#3A3A3A"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M4 14.8045C4.5 14.2451 5.98423 13.3059 6.625 14.8232C7.375 16.5993 4.75 16.9022 4 19H7"
+              stroke="#3A3A3A"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>{" "}
+        </button>
+        <div className={styles.bar}></div>
 
         {/* 문단 / 인용 */}
         {/* <button
@@ -527,9 +604,45 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
         >
           ¶
         </button> */}
+        {/* 이미지 첨부 */}
+        <button onClick={() => imageInputRef.current?.click()}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M4 17L9 10L13 16L16 13L20 17"
+              stroke="#3A3A3A"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M4 20V4H20V20H4Z"
+              stroke="#3A3A3A"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <circle cx="15.5" cy="8.5" r="1.5" fill="#3A3A3A" />
+          </svg>
+        </button>
+        <input
+          type="file"
+          accept="image/*"
+          ref={imageInputRef}
+          style={{ display: "none" }}
+          onChange={addImageFromFile}
+        />
+        {/* 인용 */}
         <button
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          className={editor.isActive("blockquote") ? "active" : ""}
+          className={`${styles.button} ${
+            editor.isActive("blockquote") ? styles.active : ""
+          }`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -573,85 +686,7 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
           </svg>
         </button>
 
-        {/* 리스트 */}
-        <button
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={editor.isActive("bulletList") ? "active" : ""}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M10 5H20"
-              stroke="#3A3A3A"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M10 12H20"
-              stroke="#3A3A3A"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M10 19H20"
-              stroke="#3A3A3A"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <circle cx="5" cy="19" r="2" fill="#3A3A3A" />
-            <circle cx="5" cy="12" r="2" fill="#3A3A3A" />
-            <circle cx="5" cy="5" r="2" fill="#3A3A3A" />
-          </svg>{" "}
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={editor.isActive("orderedList") ? "active" : ""}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M10 8H20"
-              stroke="#3A3A3A"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M10 17H20"
-              stroke="#3A3A3A"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M4 6L5.5 5V10"
-              stroke="#3A3A3A"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M4 14.8045C4.5 14.2451 5.98423 13.3059 6.625 14.8232C7.375 16.5993 4.75 16.9022 4 19H7"
-              stroke="#3A3A3A"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>{" "}
-        </button>
+        {/* 구분선 */}
         <button
           onClick={() => editor.chain().focus().setHorizontalRule().run()}
         >
@@ -674,7 +709,7 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
       </div>
 
       {/* 에디터 */}
-      <EditorContent editor={editor} className="editor" />
+      <EditorContent editor={editor} className={styles.editor} />
     </div>
   );
 };

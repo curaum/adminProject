@@ -192,3 +192,8 @@ body,
 #__next {
   height: 100%;
 }
+
+blockquote {
+  margin-left: 40px; /* 기본 들여쓰기 */
+  margin-right: 0;
+}
