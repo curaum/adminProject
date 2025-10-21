@@ -4,7 +4,7 @@ import {
   NoticeDetailResponse,
   UpdateNoticeRequest,
 } from "@/entities/notice/model/types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./NoticeDetailPage.module.css";
 import Image from "next/image";
 import AttachmentItem from "@/shared/ui/AttachmentItem";
@@ -36,55 +36,48 @@ export default function NoticeForm({
       fileSize: item.fileSize,
     }))
   );
-  const getTargetValue = (target: string): boolean => {
-    if (target === "PARTNER") {
-      return (
-        notice.accessTargetList.includes("PARTNER_KO") &&
-        notice.accessTargetList.includes("PARTNER_EN")
-      );
-    } else {
-      return notice.accessTargetList.includes(target);
-    }
-  };
-  const initialAccessTargetList = [
-    { key: "FACTORY", label: "제조소", value: getTargetValue("FACTORY") },
-    { key: "PARTNER", label: "파트너", value: getTargetValue("PARTNER") },
-    { key: "PARTNER_KO", label: "국내", value: getTargetValue("PARTNER_KO") },
-    { key: "PARTNER_EN", label: "해외", value: getTargetValue("PARTNER_EN") },
-  ];
   const [accessTargetList, setAccessTargetList] = useState(
-    initialAccessTargetList
+    new Set(notice.accessTargetList)
   );
+  const parseAccessTargets = (serverList: Set<string>) => {
+    const hasKO = serverList.has("PARTNER_KO");
+    const hasEN = serverList.has("PARTNER_EN");
+
+    return [
+      {
+        key: "FACTORY",
+        label: "기공소",
+        value: serverList.has("FACTORY"),
+      },
+      { key: "PARTNER", label: "파트너", value: hasKO && hasEN }, // 둘 다 있어야 true
+      { key: "PARTNER_KO", label: "국내", value: hasKO },
+      { key: "PARTNER_EN", label: "해외", value: hasEN },
+    ];
+  };
 
   const handleChangeAccessTargetValue = (key: string, value: boolean) => {
-    setAccessTargetList((list) => {
-      let updatedList = list.map((item) => {
-        if (item.key === key) {
-          return { ...item, value: !value };
-        }
-        return item;
-      });
+    setAccessTargetList((prev) => {
+      const next = new Set(prev);
 
-      // PARTNER 키 관련 로직
-      if (key === "PARTNER") {
-        // PARTNER 클릭 시 PARTNER_KO, PARTNER_EN 값도 동일하게
-        updatedList = updatedList.map((item) => {
-          if (item.key === "PARTNER_KO" || item.key === "PARTNER_EN") {
-            return { ...item, value: !value };
-          }
-          return item;
-        });
-      } else if (key === "PARTNER_KO" || key === "PARTNER_EN") {
-        // PARTNER_KO 또는 PARTNER_EN 클릭 시 PARTNER 값 갱신
-        const partnerValue =
-          updatedList.find((i) => i.key === "PARTNER_KO")?.value &&
-          updatedList.find((i) => i.key === "PARTNER_EN")?.value;
-        updatedList = updatedList.map((item) =>
-          item.key === "PARTNER" ? { ...item, value: partnerValue } : item
-        );
+      if (value) {
+        // 체크 해제
+        if (key === "PARTNER") {
+          next.delete("PARTNER_KO");
+          next.delete("PARTNER_EN");
+        } else {
+          next.delete(key);
+        }
+      } else {
+        // 체크
+        if (key === "PARTNER") {
+          next.add("PARTNER_KO");
+          next.add("PARTNER_EN");
+        } else {
+          next.add(key);
+        }
       }
 
-      return updatedList;
+      return next;
     });
   };
 
@@ -96,7 +89,7 @@ export default function NoticeForm({
       title,
       content,
       type,
-      accessTargetList,
+      accessTargetList: Array.from(accessTargetList),
       imageFileDTOList: imageList,
       attachmentFileDTOList: attachmentList,
     };
@@ -148,7 +141,7 @@ export default function NoticeForm({
         <div className={styles.cardRow}>
           <div className={styles.label}>공지 대상</div>
           <div className={styles.accessTargetList}>
-            {accessTargetList.map((target) => (
+            {parseAccessTargets(accessTargetList).map((target) => (
               <div
                 key={target.key}
                 className={
