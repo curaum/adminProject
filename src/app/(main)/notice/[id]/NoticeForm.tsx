@@ -12,6 +12,7 @@ import Tiptap from "@/features/create-notice/ui/TipTap";
 import BottomNavBar from "@/shared/ui/BottomNavBar";
 import { useUpdateNotice } from "@/entities/notice/model/useUpdateNotice";
 import Check from "@/shared/ui/Check";
+import ToggleButton from "@/shared/ui/ToggleButton";
 export default function NoticeForm({
   notice,
 }: {
@@ -80,7 +81,9 @@ export default function NoticeForm({
       return next;
     });
   };
-
+  useEffect(() => {
+    console.log(type);
+  }, [type]);
   const { fetchUpdateNotice, success } = useUpdateNotice();
 
   const handleSave = (notice: NoticeDetailResponse) => {
@@ -105,21 +108,18 @@ export default function NoticeForm({
           <div className={styles.label}>중요</div>
           <div className={styles.titleTextContainer}>
             <div className={styles.importantImage}>
-              {notice.type === "IMPORTANT" ? (
-                <Image
-                  src="/images/switch_enable.svg"
-                  width={52}
-                  height={32}
-                  alt="important"
-                />
-              ) : (
-                <Image
-                  src="/images/switch_disable.svg"
-                  width={52}
-                  height={32}
-                  alt="unimportant"
-                />
-              )}
+              <ToggleButton
+                value={type === "IMPORTANT"}
+                onClick={() =>
+                  setType((prev) => {
+                    if (prev === "IMPORTANT") {
+                      return "NORMAL";
+                    } else {
+                      return "IMPORTANT";
+                    }
+                  })
+                }
+              />
             </div>
             <div className={styles.label}>제목</div>
             <input
@@ -130,13 +130,6 @@ export default function NoticeForm({
           </div>
         </div>
 
-        {/* 작성일 */}
-        <div className={styles.cardRow}>
-          <div>작성일시</div>
-          <div className={styles.createdAtText}>
-            {new Date(notice.createdAt).toLocaleString()}
-          </div>
-        </div>
         {/* 공지 대상 */}
         <div className={styles.cardRow}>
           <div className={styles.label}>공지 대상</div>
