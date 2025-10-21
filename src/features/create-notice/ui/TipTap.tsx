@@ -6,6 +6,7 @@ import "./Tiptap.css";
 import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
 import Image from "@tiptap/extension-image";
+import { TextStyle, Color, FontSize } from "@tiptap/extension-text-style";
 import { useRef, useState } from "react";
 import { useClickOutside } from "@/shared/utils/useClickOutside";
 
@@ -13,17 +14,58 @@ interface TiptapProps {
   content: string;
   onChange: (value: string) => void;
 }
+const COLORS = [
+  "#000000",
+  "#FF0000",
+  "#00FF00",
+  "#0000FF",
+  "#FFA500",
+  "#800080",
+  "#008080",
+];
+interface FontSizeOption {
+  label: string;
+  value: string;
+}
 
+const FONT_SIZE_OPTIONS: FontSizeOption[] = [
+  { label: "아주 크게", value: "32px" },
+  { label: "크게", value: "24px" },
+  { label: "보통", value: "16px" },
+  { label: "작게", value: "14px" },
+];
 const Tiptap = ({ content, onChange }: TiptapProps) => {
+  const [selectedColor, setSelectedColor] = useState<string>("#000000");
+  const [isPaletteOpen, setIsPaletteOpen] = useState(false);
+  const [selectedLabel, setSelectedLabel] = useState("보통");
+  const applyColor = (color: string) => {
+    if (!editor) return;
+    editor.chain().focus().setColor(color).run();
+    setSelectedColor(color);
+    setIsPaletteOpen(false); // 색상 선택 후 팔레트 닫기
+  };
+
+  const removeColor = () => {
+    if (!editor) return;
+    editor.chain().focus().unsetColor().run();
+    setSelectedColor("");
+    setIsPaletteOpen(false);
+  };
+  const applyFontSize = (opt: { label: string; value: string }) => {
+    editor.chain().focus().setFontSize(opt.value).run();
+    setShowFontSizeOptions(false);
+    setSelectedLabel(opt.label);
+  };
+
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const [showAlignOptions, setShowAlignOptions] = useState(false);
-  const [showHeadingOptions, setShowHeadingOptions] = useState(false);
+  const [showFontSizeOptions, setShowFontSizeOptions] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const dropdownAlignRef = useRef<HTMLDivElement | null>(null);
 
   // 바깥 클릭 시 드롭다운 닫기
-  useClickOutside(dropdownRef, () => setShowHeadingOptions(false));
+  useClickOutside(dropdownRef, () => setShowFontSizeOptions(false));
   useClickOutside(dropdownAlignRef, () => setShowAlignOptions(false));
 
   const editor = useEditor({
@@ -32,6 +74,9 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
       Underline,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       Image,
+      Color,
+      TextStyle,
+      FontSize,
     ],
     content,
     onUpdate({ editor }) {
@@ -79,6 +124,102 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
     <div className="tiptap-container">
       {/* 툴바 */}
       <div className="toolbar">
+        {/* 폰트 크기 */}
+        <div
+          ref={dropdownRef}
+          className="fontSize-dropdown"
+          style={{ position: "relative", display: "inline-block" }}
+        >
+          <button onClick={() => setShowFontSizeOptions((prev) => !prev)}>
+            <span>{selectedLabel}</span>
+            <span>▼</span>
+          </button>
+
+          {showFontSizeOptions && (
+            <div
+              className="fontSize-options"
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                position: "absolute",
+                top: "100%",
+                left: 0,
+                background: "white",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+                padding: "5px 0",
+                zIndex: 10,
+              }}
+            >
+              {FONT_SIZE_OPTIONS.map((opt) => (
+                <button key={opt.value} onClick={() => applyFontSize(opt)}>
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        <div className="bar"></div>
+        {/* 폰트 색상 */}
+        <div style={{ position: "relative" }}>
+          <button
+            style={{
+              padding: "4px 8px",
+              border: "1px solid #ccc",
+              borderRadius: 4,
+              cursor: "pointer",
+              backgroundColor: selectedColor || "#fff",
+            }}
+            onClick={() => setIsPaletteOpen((prev) => !prev)}
+          ></button>
+          ▼{/* 팔레트 드롭다운 */}
+          {isPaletteOpen && (
+            <div
+              style={{
+                position: "absolute",
+                top: 36,
+                left: 0,
+                display: "flex",
+                gap: 6,
+                padding: 6,
+                backgroundColor: "#fff",
+                border: "1px solid #ccc",
+                borderRadius: 4,
+                boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
+                zIndex: 10,
+              }}
+            >
+              {COLORS.map((color) => (
+                <button
+                  key={color}
+                  style={{
+                    backgroundColor: color,
+                    width: 24,
+                    height: 24,
+                    border:
+                      selectedColor === color
+                        ? "2px solid #000"
+                        : "1px solid #ccc",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => applyColor(color)}
+                />
+              ))}
+              <button
+                onClick={removeColor}
+                style={{
+                  padding: "0 6px",
+                  border: "1px solid #ccc",
+                  borderRadius: 4,
+                  cursor: "pointer",
+                  backgroundColor: "#fff",
+                }}
+              >
+                제거
+              </button>
+            </div>
+          )}
+        </div>
         <button onClick={() => imageInputRef.current?.click()}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -112,62 +253,6 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
           onChange={addImageFromFile}
         />
 
-        {/* 헤딩 */}
-        <div
-          ref={dropdownRef}
-          className="heading-dropdown"
-          style={{ position: "relative", display: "inline-block" }}
-        >
-          <button onClick={() => setShowHeadingOptions((prev) => !prev)}>
-            H ▼
-          </button>
-
-          {showHeadingOptions && (
-            <div
-              className="heading-options"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                position: "absolute",
-                top: "100%",
-                left: 0,
-                background: "white",
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-                padding: "5px 0",
-                zIndex: 10,
-              }}
-            >
-              <button
-                onClick={() => {
-                  editor.chain().focus().toggleHeading({ level: 1 }).run();
-                  setShowHeadingOptions(false);
-                }}
-                className={editorState?.isHeading1 ? "active" : ""}
-              >
-                H1
-              </button>
-              <button
-                onClick={() => {
-                  editor.chain().focus().toggleHeading({ level: 2 }).run();
-                  setShowHeadingOptions(false);
-                }}
-                className={editorState?.isHeading2 ? "active" : ""}
-              >
-                H2
-              </button>
-              <button
-                onClick={() => {
-                  editor.chain().focus().toggleHeading({ level: 3 }).run();
-                  setShowHeadingOptions(false);
-                }}
-                className={editorState?.isHeading3 ? "active" : ""}
-              >
-                H3
-              </button>
-            </div>
-          )}
-        </div>
         {/* 텍스트 스타일 */}
         <button
           onClick={() => editor.chain().focus().toggleBold().run()}
