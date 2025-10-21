@@ -7,12 +7,13 @@ import {
 import { useState, useEffect } from "react";
 import styles from "./NoticeDetailPage.module.css";
 import Image from "next/image";
-import AttachmentItem from "@/shared/ui/AttachmentItem";
 import Tiptap from "@/features/create-notice/ui/TipTap";
 import BottomNavBar from "@/shared/ui/BottomNavBar";
 import { useUpdateNotice } from "@/entities/notice/model/useUpdateNotice";
 import Check from "@/shared/ui/Check";
 import ToggleButton from "@/shared/ui/ToggleButton";
+import AttachmentUploader from "@/shared/ui/AttachmentUploader";
+import { uploadFile } from "@/shared/api/uploadFile";
 export default function NoticeForm({
   notice,
 }: {
@@ -21,22 +22,8 @@ export default function NoticeForm({
   const [title, setTitle] = useState(notice.title);
   const [content, setContent] = useState(notice.content);
   const [type, setType] = useState(notice.type);
-  const [imageList, setImageList] = useState(
-    notice.imageList.map((item) => ({
-      realName: item.realName,
-      virtualName: item.virtualName,
-      contentType: item.contentType,
-      fileSize: item.fileSize,
-    }))
-  );
-  const [attachmentList, setAttachmentList] = useState(
-    notice.attachmentList.map((item) => ({
-      realName: item.realName,
-      virtualName: item.virtualName,
-      contentType: item.contentType,
-      fileSize: item.fileSize,
-    }))
-  );
+  const [imageList, setImageList] = useState(notice.imageList);
+  const [attachmentList, setAttachmentList] = useState(notice.attachmentList);
   const [accessTargetList, setAccessTargetList] = useState(
     new Set(notice.accessTargetList)
   );
@@ -55,7 +42,22 @@ export default function NoticeForm({
       { key: "PARTNER_EN", label: "해외", value: hasEN },
     ];
   };
-
+  const handleAddFile = async (file: File) => {
+    const response = await uploadFile({
+      file,
+      domainPurpose: "NOTICE_ATTACHMENT",
+    });
+    if (response.status === 200) {
+      const newFile = response.data;
+      setAttachmentList((prev) => [...prev, newFile]);
+    }
+  };
+  const handleDeleteFile = (idx: number) => {
+    setAttachmentList((prev) => prev.filter((_, i) => i !== idx));
+  };
+  useEffect(() => {
+    console.log("attachmentList", attachmentList);
+  }, [attachmentList]);
   const handleChangeAccessTargetValue = (key: string, value: boolean) => {
     setAccessTargetList((prev) => {
       const next = new Set(prev);
@@ -81,20 +83,28 @@ export default function NoticeForm({
       return next;
     });
   };
-  useEffect(() => {
-    console.log(type);
-  }, [type]);
+
   const { fetchUpdateNotice, success } = useUpdateNotice();
 
-  const handleSave = (notice: NoticeDetailResponse) => {
+  const handleSave = (notice: UpdateNoticeRequest) => {
     const body = {
       pid: notice.pid,
       title,
       content,
       type,
       accessTargetList: Array.from(accessTargetList),
-      imageFileDTOList: imageList,
-      attachmentFileDTOList: attachmentList,
+      imageFileDTOList: imageList.map((item) => ({
+        realName: item.realName,
+        virtualName: item.virtualName,
+        contentType: item.contentType,
+        fileSize: item.fileSize,
+      })),
+      attachmentFileDTOList: attachmentList.map((item) => ({
+        realName: item.realName,
+        virtualName: item.virtualName,
+        contentType: item.contentType,
+        fileSize: item.fileSize,
+      })),
     };
     fetchUpdateNotice(body);
     // TODO: PUT /api/admin/notice API 호출
@@ -165,9 +175,12 @@ export default function NoticeForm({
         />
 
         {/* 첨부파일 */}
-        {notice.attachmentList?.map((item) => (
-          <AttachmentItem key={item.url} item={item} />
-        ))}
+        <AttachmentUploader
+          files={attachmentList}
+          mode="edit"
+          onAddFile={handleAddFile}
+          onDelete={handleDeleteFile}
+        />
       </div>
       <BottomNavBar
         buttons={[

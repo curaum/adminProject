@@ -2,17 +2,19 @@
 
 import Image from "next/image";
 import styles from "./AttachmentItem.module.css";
+import { FileDTO, File } from "@/entities/notice/model/types";
 
 interface AttachmentItemProps {
-  item: {
-    url: string;
-    realName: string;
-    fileSize: number;
-  };
-  isEn?: boolean;
+  item: File | FileDTO;
+  isEditable: boolean;
+  onDelete?: () => void;
 }
 
-export default function AttachmentItem({ item, isEn }: AttachmentItemProps) {
+export default function AttachmentItem({
+  item,
+  isEditable,
+  onDelete,
+}: AttachmentItemProps) {
   const onDownload = async () => {
     const blob = await fetch(item.url).then((r) => r.blob());
     const url = URL.createObjectURL(blob);
@@ -57,33 +59,51 @@ export default function AttachmentItem({ item, isEn }: AttachmentItemProps) {
         </div>
 
         <div className={styles.iconBox}>
-          {item.realName &&
-            [".png", ".jpg", ".jpeg", ".gif", ".pdf", ".html", ".stl"].some(
-              (ext) => item.realName.toLowerCase().endsWith(ext)
-            ) && (
+          {isEditable ? (
+            // 편집 가능할 때: 삭제 아이콘만 보여주기
+            <button onClick={onDelete}>
               <Image
-                src={
-                  item.realName.toLowerCase().endsWith(".stl")
-                    ? "/images/svg_openEye.svg"
-                    : "/images/btn_detail.svg"
-                }
-                alt="파일 보기"
-                width={item.realName.toLowerCase().endsWith(".stl") ? 24 : 20} // 필요에 따라 width 조정
-                height={24} // 높이 고정
+                src="/images/icon_delete.svg"
+                alt="삭제"
+                width={24}
+                height={24}
                 className={styles.cursor}
-                style={{ marginRight: 10 }}
-                onClick={onViewFile}
               />
-            )}
+            </button>
+          ) : (
+            // 편집 불가: 기존 보기 / 다운로드 아이콘
+            <>
+              {item.realName &&
+                [".png", ".jpg", ".jpeg", ".gif", ".pdf", ".html", ".stl"].some(
+                  (ext) => item.realName.toLowerCase().endsWith(ext)
+                ) && (
+                  <Image
+                    src={
+                      item.realName.toLowerCase().endsWith(".stl")
+                        ? "/images/svg_openEye.svg"
+                        : "/images/btn_detail.svg"
+                    }
+                    alt="파일 보기"
+                    width={
+                      item.realName.toLowerCase().endsWith(".stl") ? 24 : 20
+                    }
+                    height={24}
+                    className={styles.cursor}
+                    style={{ marginRight: 10 }}
+                    onClick={onViewFile}
+                  />
+                )}
 
-          <Image
-            src="/images/icon_download.svg"
-            alt="다운로드"
-            width={24}
-            height={24}
-            className={styles.cursor}
-            onClick={onDownload}
-          />
+              <Image
+                src="/images/icon_download.svg"
+                alt="다운로드"
+                width={24}
+                height={24}
+                className={styles.cursor}
+                onClick={onDownload}
+              />
+            </>
+          )}
         </div>
       </div>
     </div>
