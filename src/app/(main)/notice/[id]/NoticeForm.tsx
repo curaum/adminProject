@@ -6,7 +6,6 @@ import {
 } from "@/entities/notice/model/types";
 import { useState, useEffect } from "react";
 import styles from "./NoticeDetailPage.module.css";
-import Image from "next/image";
 import Tiptap from "@/features/create-notice/ui/TipTap";
 import BottomNavBar from "@/shared/ui/BottomNavBar";
 import { useUpdateNotice } from "@/entities/notice/model/useUpdateNotice";
@@ -173,6 +172,11 @@ export default function NoticeForm({
         <div className={styles.textarea}>
           <Tiptap content={content} onChange={(val) => setContent(val)} />
         </div>
+        <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          className={styles.textarea}
+        />
 
         {/* 첨부파일 */}
         <AttachmentUploader

@@ -1,13 +1,3 @@
-/* ul,
-ol {
-  padding: 0 1rem;
-  margin: 1.25rem 1rem 1.25rem 0.4rem;
-}
-ul,
-ol li p {
-  margin-top: 0.25em;
-  margin-bottom: 0.25em;
-} */
 .editor li {
   margin-bottom: 4px; /* 리스트 항목 간격 */
 }
