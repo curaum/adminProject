@@ -167,7 +167,10 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
         </div>
         <div className={styles.bar}></div>
         {/* 폰트 색상 */}
-        <div className={styles.fontColor_container}>
+        <div
+          onClick={() => setIsPaletteOpen((prev) => !prev)}
+          className={styles.fontColor_container}
+        >
           <button
             style={{
               padding: "4px 8px",
@@ -176,7 +179,6 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
               cursor: "pointer",
               backgroundColor: selectedColor || "#fff",
             }}
-            onClick={() => setIsPaletteOpen((prev) => !prev)}
           ></button>
           <NextImage
             src={"/images/icon_toggle.svg"}

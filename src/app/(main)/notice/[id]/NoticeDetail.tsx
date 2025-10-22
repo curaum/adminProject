@@ -7,13 +7,16 @@ import Check from "@/shared/ui/Check";
 import BottomNavBar from "@/shared/ui/BottomNavBar";
 import { useRouter } from "next/navigation";
 import { useNoticeDelete } from "@/entities/notice/model/useNoticeDelete";
+import { useToast } from "@/shared/utils/ToastContext";
 export default function NoticeDetail({
   notice,
 }: {
   notice: NoticeDetailResponse;
 }) {
-  const { handleDeleteNotice, loading } = useNoticeDelete();
+  const { fetchDeleteNotice, loading } = useNoticeDelete();
   const router = useRouter();
+  const { showToast } = useToast();
+
   const accessTargetList = [
     { key: "FACTORY", label: "제조소", value: true },
     { key: "PARTNER", label: "파트너", value: true },
@@ -30,7 +33,13 @@ export default function NoticeDetail({
       return notice.accessTargetList.includes(target);
     }
   };
-
+  const handleDeleteNotice = async (pid: number) => {
+    const result = await fetchDeleteNotice(pid);
+    if (result) {
+      showToast("공지를 삭제하였습니다.");
+      router.push(`/notice`);
+    }
+  };
   return (
     <div className={styles.container}>
       {/* 제목 */}

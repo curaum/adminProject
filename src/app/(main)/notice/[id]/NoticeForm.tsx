@@ -173,11 +173,6 @@ export default function NoticeForm({
         <div className={styles.textarea}>
           <Tiptap content={content} onChange={(val) => setContent(val)} />
         </div>
-        <textarea
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          className={styles.textarea}
-        />
 
         {/* 첨부파일 */}
         <AttachmentUploader
