@@ -36,10 +36,67 @@ const FONT_SIZE_OPTIONS: FontSizeOption[] = [
   { label: "보통", value: "16px" },
   { label: "작게", value: "14px" },
 ];
+const INDENT_UNIT = "\u00A0\u00A0\u00A0\u00A0";
 const Tiptap = ({ content, onChange }: TiptapProps) => {
   const [selectedColor, setSelectedColor] = useState<string>("#000000");
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const [selectedLabel, setSelectedLabel] = useState("보통");
+  const increaseIndent = () => {
+    if (!editor) return;
+
+    const { state, view } = editor;
+    const tr = state.tr;
+
+    state.doc.nodesBetween(
+      state.selection.from,
+      state.selection.to,
+      (node, pos) => {
+        if (node.type.name === "paragraph") {
+          const textNode = node.content.firstChild;
+          if (textNode && textNode.isText) {
+            const newText = INDENT_UNIT + textNode.text;
+            tr.replaceWith(
+              pos + 1,
+              pos + node.nodeSize - 1,
+              state.schema.text(newText)
+            );
+          }
+        }
+      }
+    );
+
+    view.dispatch(tr);
+  };
+  const decreaseIndent = () => {
+    if (!editor) return;
+
+    const { state, view } = editor;
+    const tr = state.tr;
+
+    state.doc.nodesBetween(
+      state.selection.from,
+      state.selection.to,
+      (node, pos) => {
+        if (node.type.name === "paragraph") {
+          const textNode = node.content.firstChild;
+          if (textNode && textNode.isText) {
+            const text = textNode.text;
+            const newText = text.startsWith(INDENT_UNIT)
+              ? text.slice(INDENT_UNIT.length)
+              : text;
+            tr.replaceWith(
+              pos + 1,
+              pos + node.nodeSize - 1,
+              state.schema.text(newText)
+            );
+          }
+        }
+      }
+    );
+
+    view.dispatch(tr);
+  };
+
   const applyColor = (color: string) => {
     if (!editor) return;
     editor.chain().focus().setColor(color).run();
@@ -76,7 +133,7 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
       Color,
       TextStyle,
       FontSize,
-      AutoUnlinkOnDelete,
+      // AutoUnlinkOnDelete,
       Link.configure({
         openOnClick: true,
         HTMLAttributes: {
@@ -605,6 +662,92 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
             />
           </svg>{" "}
         </button>
+        {/* 내어쓰기 */}
+        <button onClick={decreaseIndent}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M4 5H20"
+              stroke="#3A3A3A"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M10 10H20"
+              stroke="#3A3A3A"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M10 15L20 15"
+              stroke="#3A3A3A"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M4 20L20 20"
+              stroke="#3A3A3A"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M7 14.8981L7 10.1019C7 9.6723 6.49404 9.44271 6.17075 9.72559L3.43004 12.1237C3.20238 12.3229 3.20238 12.6771 3.43004 12.8763L6.17075 15.2744C6.49404 15.5573 7 15.3277 7 14.8981Z"
+              fill="#3A3A3A"
+            />
+          </svg>
+        </button>
+        {/* 들여쓰기 */}
+        <button onClick={increaseIndent}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M4 5H20"
+              stroke="#3A3A3A"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M10 10H20"
+              stroke="#3A3A3A"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M10 15L20 15"
+              stroke="#3A3A3A"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M4 20L20 20"
+              stroke="#3A3A3A"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M3 10.1019L3 14.8981C3 15.3277 3.50596 15.5573 3.82925 15.2744L6.56996 12.8763C6.79762 12.6771 6.79762 12.3229 6.56996 12.1237L3.82925 9.7256C3.50596 9.44272 3 9.6723 3 10.1019Z"
+              fill="#3A3A3A"
+            />
+          </svg>
+        </button>
         <div className={styles.bar}></div>
 
         {/* 문단 / 인용 */}
@@ -651,19 +794,51 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
         <button
           onClick={() => {
             const url = prompt("링크 URL을 입력하세요");
-            console.log("link class:", styles.link_style);
+            if (!url) return;
 
+            let finalUrl = url;
+            if (!/^https?:\/\//i.test(url)) {
+              finalUrl = "https://" + url;
+            }
             if (url) {
               editor
                 .chain()
                 .focus()
                 .extendMarkRange("link")
-                .setLink({ href: url })
+                .setLink({ href: finalUrl })
                 .run();
             }
           }}
         >
-          링크
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M9 7H7.86667C4.66667 7 2 8.61538 2 12C2 15.3846 4.66667 17 7.86667 17H9"
+              stroke="#3A3A3A"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M15 17L16.1333 17C19.3333 17 22 15.3846 22 12C22 8.61539 19.3333 7 16.1333 7L15 7"
+              stroke="#3A3A3A"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M7 12L17 12"
+              stroke="#3A3A3A"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>{" "}
         </button>
         {/* 인용 */}
         <button

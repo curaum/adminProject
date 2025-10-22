@@ -16,14 +16,19 @@ const AutoUnlinkOnDelete = Extension.create({
           transactions.forEach((transaction) => {
             if (!transaction.docChanged) return;
 
-            newState.doc.descendants((node, pos) => {
-              const linkMark = newState.schema.marks.link;
-              if (!linkMark) return;
+            // 변경된 범위 계산
+            const from = transaction.steps.length
+              ? Math.min(...transaction.steps.map((s: any) => s.from ?? 0))
+              : 0;
+            const to = transaction.steps.length
+              ? Math.max(...transaction.steps.map((s: any) => s.to ?? 0))
+              : 0;
 
+            // 편집된 범위 내 링크 마크 제거
+            newState.doc.nodesBetween(from, to, (node, pos) => {
               node.marks.forEach((mark) => {
-                if (mark.type === linkMark && node.textContent.length === 0) {
-                  // 노드 전체가 아닌 텍스트 범위만 제거
-                  tr = tr.removeMark(pos, pos + node.nodeSize - 2, linkMark);
+                if (mark.type.name === "link") {
+                  tr = tr.removeMark(pos, pos + node.nodeSize, mark.type);
                   modified = true;
                 }
               });
