@@ -108,3 +108,20 @@
   gap: 4px;
   cursor: pointer;
 }
+.fontColor_container .pallette {
+  position: absolute;
+  left: -4px;
+  top: 30px;
+  display: flex;
+  width: 32px;
+  height: 172px;
+  padding: 4px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 4px;
+  flex-shrink: 0;
+  z-index: 1;
+  background-color: white;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+}

@@ -19,12 +19,11 @@ interface TiptapProps {
 }
 const COLORS = [
   "#000000",
-  "#FF0000",
-  "#00FF00",
-  "#0000FF",
-  "#FFA500",
-  "#800080",
-  "#008080",
+  "#808080",
+  "#c0c0c0",
+  "#008000",
+  "#ff0000",
+  "#0000ff",
 ];
 interface FontSizeOption {
   label: string;
@@ -242,8 +241,8 @@ const Tiptap = ({ content, onChange, onAddImage }: TiptapProps) => {
         >
           <button
             style={{
-              padding: "4px 8px",
-              border: "1px solid #ccc",
+              border: "2px solid #E5E5E5",
+              borderRadius: "4px",
               cursor: "pointer",
               backgroundColor: selectedColor || "#000",
             }}
@@ -256,38 +255,50 @@ const Tiptap = ({ content, onChange, onAddImage }: TiptapProps) => {
           />
           {/* 팔레트 드롭다운 */}
           {isPaletteOpen && (
-            <div
-              style={{
-                position: "absolute",
-                top: 36,
-                left: 0,
-                display: "flex",
-                gap: 6,
-                padding: 6,
-                backgroundColor: "#fff",
-                border: "1px solid #ccc",
-                borderRadius: 4,
-                boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
-                zIndex: 10,
-              }}
-            >
+            <div className={styles.pallette}>
               {COLORS.map((color) => (
                 <button
                   key={color}
                   style={{
+                    position: "relative",
                     backgroundColor: color,
                     width: 24,
                     height: 24,
-                    border:
-                      selectedColor === color
-                        ? "2px solid #000"
-                        : "1px solid #ccc",
+                    border: "2px solid #E5E5E5",
                     cursor: "pointer",
+                    borderRadius: "4px",
                   }}
                   onClick={() => applyColor(color)}
-                />
+                >
+                  {selectedColor === color && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                      }}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="14"
+                        height="10"
+                        viewBox="0 0 14 10"
+                        fill="none"
+                      >
+                        <path
+                          d="M1 5L5 9L13 1"
+                          stroke="white"
+                          stroke-width="1.4"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </div>
+                  )}
+                </button>
               ))}
-              <button
+              {/* <button
                 onClick={removeColor}
                 style={{
                   padding: "0 6px",
@@ -298,7 +309,7 @@ const Tiptap = ({ content, onChange, onAddImage }: TiptapProps) => {
                 }}
               >
                 제거
-              </button>
+              </button> */}
             </div>
           )}
         </div>
