@@ -1,0 +1,21 @@
+.profileRow {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  width: 800px;
+  height: 60px;
+  background-color: white;
+  gap: 84px;
+  color: #3a3a3a;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+}
+.nameCard {
+  color: #7c7c7c;
+
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
