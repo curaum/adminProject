@@ -22,14 +22,8 @@
   height: 24px;
 }
 
-.toolbar button.active {
-  background: #7c7c7c;
-  color: white;
-  border-color: #7c7c7c;
-}
-
 .toolbar button:hover {
-  background: #eaeaea;
+  background: #e4f7ee;
 }
 
 .editor {
@@ -67,23 +61,37 @@
   cursor: pointer;
 }
 
-.fontSize_dropdown button {
+.fontSize_dropdown > button {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 6px 0 10px;
   border: 1px solid #e5e5e5;
+  border-radius: 4px;
   background: white;
   cursor: pointer;
-  border-radius: 4px;
   font-weight: 500;
   width: 120px;
   height: 40px;
 }
+.fontSize_options {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #e5e5e5;
+  border-radius: 4px;
+  z-index: 10;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+  gap: 1px;
+}
 
-.fontSize_options button {
+.fontSize_options > button {
   display: block;
   width: 120px;
+  height: 40px;
+
   padding: 5px 10px;
   text-align: left;
   border: none;
@@ -124,4 +132,17 @@
   z-index: 1;
   background-color: white;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+}
+.editor em {
+  font-style: italic !important;
+}
+
+.editor ul {
+  padding-left: 1rem;
+  list-style: disc; /* ⚡ 기본 불릿 스타일 */
+}
+
+.editor ol {
+  padding-left: 1rem;
+  list-style: decimal; /* ⚡ 숫자 리스트 */
 }
