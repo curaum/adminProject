@@ -196,7 +196,6 @@ export default function NoticeForm({
             onAddImage={handleAddImage}
           />
         </div>
-        <div className={styles.textarea}>{content}</div>
 
         {/* 첨부파일 */}
         <AttachmentUploader

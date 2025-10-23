@@ -21,6 +21,7 @@
     "@tiptap/starter-kit": "^3.6.6",
     "axios": "^1.12.2",
     "crypto-js": "^4.2.0",
+    "lodash.debounce": "^4.0.8",
     "next": "15.5.4",
     "normalize.css": "^8.0.1",
     "prosemirror-state": "^1.4.3",

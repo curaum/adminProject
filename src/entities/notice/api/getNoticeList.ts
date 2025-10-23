@@ -2,22 +2,21 @@ import { apiClient } from "@/shared/api";
 import { NoticeListResponse } from "../model/types";
 import { AxiosResponse } from "axios";
 interface GetNoticeListParams {
-  condition?: {
-    title?: string;
-    accessTarget?: string;
-  };
   page: number;
   size: number;
+  accessTarget: string;
+  title: string;
 }
 
 export async function getNoticeList({
   page,
   size,
-  condition,
+  accessTarget,
+  title,
 }: GetNoticeListParams): Promise<AxiosResponse<NoticeListResponse>> {
   try {
     const response = await apiClient.get("/api/admin/notice/list", {
-      params: { page, size, ...condition },
+      params: { page, size, accessTarget, title },
     });
     return response;
   } catch (err) {

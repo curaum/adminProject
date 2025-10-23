@@ -11,12 +11,17 @@ export function useNoticeList() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchNoticeList = async (page: number, size: number) => {
+  const fetchNoticeList = async (
+    page: number,
+    size: number,
+    accessTarget: string,
+    title: string
+  ) => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await getNoticeList({ page, size });
+      const response = await getNoticeList({ page, size, accessTarget, title });
       setNotices(response.data.content);
       setTotalPages(response.data.totalPages);
       setTotalElements(response.data.totalElements);
