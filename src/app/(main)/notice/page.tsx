@@ -1,12 +1,15 @@
 "use client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useNoticeList } from "@/entities/notice/model/useNoticeList";
 import Pagination from "@/shared/ui/Pagination";
 import { formatDateAndTime } from "@/shared/utils/dateUtil";
 import styles from "./NoticeListPage.module.css";
 import { useToast } from "@/shared/utils/ToastContext";
+import BottomNavBar from "@/shared/ui/BottomNavBar";
 export default function NoticeListPage() {
+  const router = useRouter();
   const {
     notices,
     totalPages,
@@ -22,6 +25,9 @@ export default function NoticeListPage() {
     setPage(newPage);
     fetchNoticeList(newPage, pageSize);
     // 실제로는 여기서 서버에 요청 보내거나 데이터를 다시 불러옴
+  };
+  const navigateToNoticeCreatePage = () => {
+    router.push("/notice/new");
   };
 
   const openNoticePage = (pid: number, mode: string) => {
@@ -96,6 +102,16 @@ export default function NoticeListPage() {
           </div>
         ))}
       </div>
+      <BottomNavBar
+        buttons={[
+          {
+            id: "create",
+            label: "공지 작성",
+            onClick: () => navigateToNoticeCreatePage(),
+            activeStyle: { borderColor: "#51c37e", color: "#51c37e" },
+          },
+        ]}
+      />
     </div>
   );
 }
