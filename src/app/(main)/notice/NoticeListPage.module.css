@@ -17,7 +17,7 @@
   align-items: center;
   padding: 0 20px;
   background-color: white;
-  width: 1158px;
+  min-width: 1158px;
   height: 58px;
   gap: 16px;
 }
@@ -76,10 +76,12 @@
   border: 1px solid #e5e5e5;
   padding: 0 8px;
 }
+.title_input {
+  flex: 1;
+}
 .title_input:focus {
   border: none;
   outline: none;
-  flex: 1;
 }
 /* 상단 헤더 영역 */
 .headerRow {

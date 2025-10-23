@@ -30,27 +30,33 @@ export default function NoticeListPage() {
   const [accessTarget, setAccessTarget] = useState(ACCESSTARGET_OPTIONS[0]);
   const [showAccessTarget, setShowAccessTarget] = useState(false);
   const [title, setTitle] = useState("");
+  const pageSize = 10;
+
   const debouncedFetch = useCallback(
     debounce((value) => {
       fetchNoticeList(page, pageSize, accessTarget.value, value);
     }, 300),
     []
   );
-  const handleChange = (e) => {
+  const handleTitleChange = (e) => {
     const value = e.target.value;
     setTitle(value);
     debouncedFetch(value);
   };
-  const pageSize = 20;
-  const handleChangeAccessTarget = (target) => {
-    setAccessTarget(target);
-    setShowAccessTarget((prev) => !prev);
+  const handleTitleReset = () => {
+    setTitle("");
+    debouncedFetch("");
   };
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
     fetchNoticeList(newPage, pageSize, accessTarget.value, title);
     // 실제로는 여기서 서버에 요청 보내거나 데이터를 다시 불러옴
   };
+  const handleAccessTargetChange = (target) => {
+    setAccessTarget(target);
+    setShowAccessTarget((prev) => !prev);
+  };
+
   const navigateToNoticeCreatePage = () => {
     router.push("/notice/new");
   };
@@ -103,7 +109,7 @@ export default function NoticeListPage() {
                     return (
                       <button
                         key={opt.value}
-                        onClick={() => handleChangeAccessTarget(opt)}
+                        onClick={() => handleAccessTargetChange(opt)}
                       >
                         {opt.label}
                       </button>
@@ -126,9 +132,19 @@ export default function NoticeListPage() {
                 <input
                   className={styles.title_input}
                   value={title}
-                  onChange={handleChange}
+                  onChange={handleTitleChange}
                   placeholder="공지 제목을 검색해주세요."
                 />
+                {title !== "" && (
+                  <button onClick={handleTitleReset}>
+                    <Image
+                      src={"/images/icon_del.svg"}
+                      alt="delete"
+                      width={24}
+                      height={24}
+                    />
+                  </button>
+                )}
               </div>
             </div>
           </div>
