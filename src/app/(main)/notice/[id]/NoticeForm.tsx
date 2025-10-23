@@ -59,6 +59,17 @@ export default function NoticeForm({
       setAttachmentList((prev) => [...prev, newFile]);
     }
   };
+  const handleAddImage = async (file: File) => {
+    const response = await uploadFile({
+      file,
+      domainPurpose: "NOTICE_IMAGE",
+    });
+    if (response.status === 200) {
+      const newFile = response.data;
+      setImageList((prev) => [...prev, newFile]);
+      return newFile.url;
+    }
+  };
   const handleDeleteFile = (idx: number) => {
     setAttachmentList((prev) => prev.filter((_, i) => i !== idx));
   };
@@ -179,7 +190,11 @@ export default function NoticeForm({
 
         {/* 내용 */}
         <div className={styles.textarea}>
-          <Tiptap content={content} onChange={(val) => setContent(val)} />
+          <Tiptap
+            content={content}
+            onChange={(val) => setContent(val)}
+            onAddImage={handleAddImage}
+          />
         </div>
 
         {/* 첨부파일 */}

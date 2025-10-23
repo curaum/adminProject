@@ -15,6 +15,7 @@ import NextImage from "next/image";
 interface TiptapProps {
   content: string;
   onChange: (value: string) => void;
+  onAddImage: (file: File) => void;
 }
 const COLORS = [
   "#000000",
@@ -37,7 +38,7 @@ const FONT_SIZE_OPTIONS: FontSizeOption[] = [
   { label: "작게", value: "14px" },
 ];
 const INDENT_UNIT = "\u00A0\u00A0\u00A0\u00A0";
-const Tiptap = ({ content, onChange }: TiptapProps) => {
+const Tiptap = ({ content, onChange, onAddImage }: TiptapProps) => {
   const [selectedColor, setSelectedColor] = useState<string>("#000000");
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const [selectedLabel, setSelectedLabel] = useState("보통");
@@ -172,12 +173,14 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
   });
 
   if (!editor) return null;
-  const addImageFromFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const addImageFromFile = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
 
     const file = files[0];
-    const url = URL.createObjectURL(file);
+    const url = await onAddImage(file);
 
     editor.chain().focus().setImage({ src: url }).run();
 
@@ -749,14 +752,6 @@ const Tiptap = ({ content, onChange }: TiptapProps) => {
           </svg>
         </button>
         <div className={styles.bar}></div>
-
-        {/* 문단 / 인용 */}
-        {/* <button
-          onClick={() => editor.chain().focus().toggleParagraph().run()}
-          className={editor.isActive("paragraph") ? "active" : ""}
-        >
-          ¶
-        </button> */}
         {/* 이미지 첨부 */}
         <button onClick={() => imageInputRef.current?.click()}>
           <svg
