@@ -45,14 +45,6 @@ export interface NoticeDetailResponse extends NoticeItem {
   accessTargetList: string[];
 }
 
-export interface AddNoticeRequest {
-  title: string;
-  content: string;
-  type: "IMPORTANT" | "NORMAL";
-  accessTargetList: string[];
-  imageFileDTOList?: string[];
-  attachmentFileDTOList?: string[];
-}
 export interface UpdateNoticeRequest {
   pid: string | number;
   title: string;
@@ -61,6 +53,14 @@ export interface UpdateNoticeRequest {
   accessTargetList: string[];
   imageFileDTOList?: FileDTO[];
   attachmentFileDTOList?: FileDTO[];
+}
+export interface CreateNoticeRequest {
+  title: string;
+  content: string;
+  type: "IMPORTANT" | "NORMAL";
+  accessTargetList: string[];
+  imageFileDTOList: FileDTO[];
+  attachmentFileDTOList: FileDTO[];
 }
 
 export interface AddNoticeResponse {

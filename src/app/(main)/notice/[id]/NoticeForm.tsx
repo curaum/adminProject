@@ -3,12 +3,14 @@
 import {
   NoticeDetailResponse,
   UpdateNoticeRequest,
+  CreateNoticeRequest,
 } from "@/entities/notice/model/types";
 import { useState, useEffect } from "react";
 import styles from "./NoticeDetailPage.module.css";
 import Tiptap from "@/features/create-notice/ui/TipTap";
 import BottomNavBar from "@/shared/ui/BottomNavBar";
 import { useUpdateNotice } from "@/entities/notice/model/useUpdateNotice";
+import { useCreateNotice } from "@/features/create-notice/model/useCreateNotice";
 import Check from "@/shared/ui/Check";
 import ToggleButton from "@/shared/ui/ToggleButton";
 import AttachmentUploader from "@/shared/ui/AttachmentUploader";
@@ -18,17 +20,19 @@ import { useToast } from "@/shared/utils/ToastContext";
 export default function NoticeForm({
   notice,
 }: {
-  notice: NoticeDetailResponse;
+  notice?: NoticeDetailResponse;
 }) {
   const router = useRouter();
   const { showToast } = useToast();
-  const [title, setTitle] = useState(notice.title);
-  const [content, setContent] = useState(notice.content);
-  const [type, setType] = useState(notice.type);
-  const [imageList, setImageList] = useState(notice.imageList);
-  const [attachmentList, setAttachmentList] = useState(notice.attachmentList);
+  const [title, setTitle] = useState(notice?.title ?? "");
+  const [content, setContent] = useState(notice?.content ?? "");
+  const [type, setType] = useState(notice?.type ?? "NORMAL");
+  const [imageList, setImageList] = useState(notice?.imageList ?? []);
+  const [attachmentList, setAttachmentList] = useState(
+    notice?.attachmentList ?? []
+  );
   const [accessTargetList, setAccessTargetList] = useState(
-    new Set(notice.accessTargetList)
+    new Set(notice?.accessTargetList ?? [])
   );
   const parseAccessTargets = (serverList: Set<string>) => {
     const hasKO = serverList.has("PARTNER_KO");
@@ -86,10 +90,11 @@ export default function NoticeForm({
   };
 
   const { fetchUpdateNotice, success } = useUpdateNotice();
+  const { fetchCreateNotice } = useCreateNotice();
 
-  const handleSave = async (notice: UpdateNoticeRequest) => {
-    const body = {
-      pid: notice.pid,
+  const handleSave = async (notice) => {
+    const body: UpdateNoticeRequest | CreateNoticeRequest = {
+      ...(notice ? { pid: notice.pid } : {}),
       title,
       content,
       type,
@@ -107,10 +112,14 @@ export default function NoticeForm({
         fileSize: item.fileSize,
       })),
     };
-    const result = await fetchUpdateNotice(body);
+    const result = notice
+      ? await fetchUpdateNotice(body as UpdateNoticeRequest) // 수정
+      : await fetchCreateNotice(body);
     if (result) {
-      showToast("공지 등록이 완료되었습니다.");
-      router.push(`/notice/${notice.pid}`);
+      showToast(
+        notice ? "공지 수정이 완료되었습니다." : "공지 등록이 완료되었습니다."
+      );
+      router.push(notice ? `/notice/${notice.pid}` : `/notice`);
     }
   };
 
@@ -172,11 +181,6 @@ export default function NoticeForm({
         <div className={styles.textarea}>
           <Tiptap content={content} onChange={(val) => setContent(val)} />
         </div>
-        <textarea
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          className={styles.textarea}
-        />
 
         {/* 첨부파일 */}
         <AttachmentUploader
