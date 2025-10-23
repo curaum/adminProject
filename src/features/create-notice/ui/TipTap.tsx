@@ -18,12 +18,12 @@ interface TiptapProps {
   onAddImage: (file: File) => void;
 }
 const COLORS = [
-  "#000000",
-  "#808080",
-  "#c0c0c0",
-  "#008000",
-  "#ff0000",
-  "#0000ff",
+  "#3A3A3A",
+  "#7C7C7C",
+  "#E5E5E5",
+  "#51C37E",
+  "#FE665C",
+  "#1F9DFF",
 ];
 interface FontSizeOption {
   label: string;

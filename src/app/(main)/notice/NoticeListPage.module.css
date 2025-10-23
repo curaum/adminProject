@@ -9,6 +9,7 @@
   align-items: center;
   justify-content: space-between;
   height: 58px;
+  margin-bottom: 24px;
   gap: 16px;
 }
 .filterBox {
@@ -18,7 +19,6 @@
   background-color: white;
   width: 1158px;
   height: 58px;
-  margin-bottom: 24px;
   gap: 16px;
 }
 .accessTarget_box {
@@ -26,6 +26,8 @@
   align-items: center;
   position: relative;
   gap: 8px;
+  font-size: 14px;
+  color: #7c7c7c;
 }
 .accessTarget_container {
   position: relative;
