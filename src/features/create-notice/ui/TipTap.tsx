@@ -55,11 +55,11 @@ const Tiptap = ({ content, onChange, onAddImage }: TiptapProps) => {
           const textNode = node.content.firstChild;
           if (textNode && textNode.isText) {
             const newText = INDENT_UNIT + textNode.text;
-            tr.replaceWith(
-              pos + 1,
-              pos + node.nodeSize - 1,
-              state.schema.text(newText)
-            );
+
+            // ✅ 기존 marks 유지
+            const styledText = state.schema.text(newText, textNode.marks);
+
+            tr.replaceWith(pos + 1, pos + node.nodeSize - 1, styledText);
           }
         }
       }
@@ -67,6 +67,7 @@ const Tiptap = ({ content, onChange, onAddImage }: TiptapProps) => {
 
     view.dispatch(tr);
   };
+
   const decreaseIndent = () => {
     if (!editor) return;
 
@@ -84,11 +85,11 @@ const Tiptap = ({ content, onChange, onAddImage }: TiptapProps) => {
             const newText = text.startsWith(INDENT_UNIT)
               ? text.slice(INDENT_UNIT.length)
               : text;
-            tr.replaceWith(
-              pos + 1,
-              pos + node.nodeSize - 1,
-              state.schema.text(newText)
-            );
+
+            // ✅ marks 유지
+            const styledText = state.schema.text(newText, textNode.marks);
+
+            tr.replaceWith(pos + 1, pos + node.nodeSize - 1, styledText);
           }
         }
       }
@@ -155,7 +156,6 @@ const Tiptap = ({ content, onChange, onAddImage }: TiptapProps) => {
       const label =
         FONT_SIZE_OPTIONS.find((option) => option.value === fontSize)?.label ||
         "보통";
-      console.log(color, label);
       setSelectedColor(color);
       setSelectedLabel(label);
     },
