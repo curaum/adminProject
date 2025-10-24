@@ -6,9 +6,9 @@ import { useNoticeList } from "@/entities/notice/model/useNoticeList";
 import Pagination from "@/shared/ui/Pagination";
 import { formatDateAndTime } from "@/shared/utils/dateUtil";
 import styles from "./NoticeListPage.module.css";
-import { useToast } from "@/shared/utils/ToastContext";
 import BottomNavBar from "@/shared/ui/BottomNavBar";
 import DropdownSelect from "@/shared/ui/DropdownSelect";
+import SearchInput from "@/shared/ui/SearchInput";
 import debounce from "lodash.debounce";
 const ACCESSTARGET_OPTIONS = [
   { label: "전체", value: "" },
@@ -26,10 +26,8 @@ export default function NoticeListPage() {
     error,
     fetchNoticeList,
   } = useNoticeList();
-  const { showToast } = useToast();
   const [page, setPage] = useState(0);
   const [accessTarget, setAccessTarget] = useState(ACCESSTARGET_OPTIONS[0]);
-  const [showAccessTarget, setShowAccessTarget] = useState(false);
   const [title, setTitle] = useState("");
   const pageSize = 10;
 
@@ -55,7 +53,6 @@ export default function NoticeListPage() {
   };
   const handleAccessTargetChange = (target) => {
     setAccessTarget(target);
-    setShowAccessTarget((prev) => !prev);
   };
 
   const navigateToNoticeCreatePage = () => {
@@ -84,9 +81,6 @@ export default function NoticeListPage() {
 
   return (
     <div className={styles.container}>
-      {/* <button onClick={() => showToast("작업이 완료되었습니다!")}>
-        토스트 띄우기
-      </button> */}
       <div className={styles.filterContainer}>
         <div className={styles.filterBox}>
           <div className={styles.accessTarget_box}>
@@ -99,32 +93,12 @@ export default function NoticeListPage() {
           </div>
           <div className={styles.accessTarget_box}>
             <div>제목</div>
-            <div className={styles.accessTarget_container}>
-              <div className={styles.title_inputBox}>
-                <Image
-                  src={"/images/icon_search.svg"}
-                  alt="search"
-                  width={24}
-                  height={24}
-                />
-                <input
-                  className={styles.title_input}
-                  value={title}
-                  onChange={handleTitleChange}
-                  placeholder="공지 제목을 검색해주세요."
-                />
-                {title !== "" && (
-                  <button onClick={handleTitleReset}>
-                    <Image
-                      src={"/images/icon_del.svg"}
-                      alt="delete"
-                      width={24}
-                      height={24}
-                    />
-                  </button>
-                )}
-              </div>
-            </div>
+            <SearchInput
+              value={title}
+              onChange={handleTitleChange}
+              onReset={handleTitleReset}
+              placeholder="공지 제목을 검색해주세요."
+            />
           </div>
         </div>
 
