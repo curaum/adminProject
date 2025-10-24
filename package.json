@@ -27,6 +27,7 @@
     "prosemirror-state": "^1.4.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "tiptap-extension-resizable-image": "^2.0.0",
     "zustand": "^5.0.8"
   },
   "devDependencies": {

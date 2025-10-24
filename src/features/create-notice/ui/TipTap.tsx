@@ -7,10 +7,12 @@ import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
+import { ResizableImage } from "tiptap-extension-resizable-image";
 import { TextStyle, Color, FontSize } from "@tiptap/extension-text-style";
 import { useRef, useState, useEffect } from "react";
 import NextImage from "next/image";
 import DropdownSelect from "@/shared/ui/DropdownSelect";
+import "tiptap-extension-resizable-image/styles.css";
 interface TiptapProps {
   content: string;
   onChange: (value: string) => void;
@@ -114,16 +116,18 @@ const Tiptap = ({ content, onChange, onAddImage }: TiptapProps) => {
   };
   const applyFontSize = (opt: { label: string; value: string | number }) => {
     editor.chain().focus().setFontSize(opt.value).run();
-    setShowFontSizeOptions(false);
     setSelectedFontSize(opt);
   };
 
   const imageInputRef = useRef<HTMLInputElement | null>(null);
-  const [showFontSizeOptions, setShowFontSizeOptions] = useState(false);
 
   const editor = useEditor({
     extensions: [
       StarterKit,
+      ResizableImage.configure({
+        defaultWidth: 200,
+        defaultHeight: 200,
+      }),
       Underline,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       Image,
@@ -141,7 +145,9 @@ const Tiptap = ({ content, onChange, onAddImage }: TiptapProps) => {
     ],
     content,
     onUpdate({ editor }) {
-      onChange(editor.getHTML());
+      setTimeout(() => {
+        onChange(editor.getHTML());
+      }, 0);
     },
     onSelectionUpdate({ editor }) {
       const attrs = editor.getAttributes("textStyle");
@@ -158,6 +164,15 @@ const Tiptap = ({ content, onChange, onAddImage }: TiptapProps) => {
 
     immediatelyRender: false,
   });
+  // editor?.commands.setResizableImage({
+  //   src: "",
+  //   alt: "",
+  //   title: "",
+  //   width: 200,
+  //   height: 200,
+  //   className: "",
+  //   "data-keep-ratio": true,
+  // });
   const editorState = useEditorState({
     editor,
     selector: (ctx) => {
@@ -197,6 +212,7 @@ const Tiptap = ({ content, onChange, onAddImage }: TiptapProps) => {
     // 선택 초기화
     if (imageInputRef.current) imageInputRef.current.value = "";
   };
+
   return (
     <div className={styles.tiptap_container}>
       {/* 툴바 */}
@@ -858,7 +874,7 @@ const Tiptap = ({ content, onChange, onAddImage }: TiptapProps) => {
               stroke-linecap="round"
               stroke-linejoin="round"
             />
-          </svg>{" "}
+          </svg>
         </button>
       </div>
 
