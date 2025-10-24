@@ -183,7 +183,7 @@ strong {
 /* 11. 포커스 outline 스타일 */
 input:focus,
 textarea:focus {
-  outline: 1px solid #005a74;
+  outline: none;
 }
 
 /* 12. Next.js SSR 환경용 높이 설정 */

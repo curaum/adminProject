@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useLogin } from "../model/useLogin";
-import Image from "next/image";
 import styles from "./LoginForm.module.css";
 import Button from "@/shared/ui/Button";
 import Check from "@/shared/ui/Check";

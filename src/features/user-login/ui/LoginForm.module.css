@@ -34,6 +34,10 @@
 .password_input::placeholder {
   color: #7c7c7c;
 }
+.login_input:focus,
+.password_input:focus {
+  outline: 1px solid #005a74;
+}
 
 .login_persist {
   display: flex;
