@@ -39,11 +39,27 @@ const FONT_SIZE_OPTIONS: FontSizeOption[] = [
 ];
 const INDENT_UNIT = "\u00A0\u00A0\u00A0\u00A0";
 const Tiptap = ({ content, onChange, onAddImage }: TiptapProps) => {
+  const palletteRef = useRef<HTMLDivElement>(null);
   const [selectedColor, setSelectedColor] = useState<string>("#000000");
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const [selectedFontSize, setSelectedFontSize] = useState(
     FONT_SIZE_OPTIONS[2]
   );
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        palletteRef.current &&
+        !palletteRef.current.contains(e.target as Node)
+      ) {
+        setIsPaletteOpen(false);
+      }
+    }
+
+    if (isPaletteOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isPaletteOpen]);
   const increaseIndent = () => {
     if (!editor) return;
 
@@ -164,15 +180,7 @@ const Tiptap = ({ content, onChange, onAddImage }: TiptapProps) => {
 
     immediatelyRender: false,
   });
-  // editor?.commands.setResizableImage({
-  //   src: "",
-  //   alt: "",
-  //   title: "",
-  //   width: 200,
-  //   height: 200,
-  //   className: "",
-  //   "data-keep-ratio": true,
-  // });
+
   const editorState = useEditorState({
     editor,
     selector: (ctx) => {
@@ -227,6 +235,7 @@ const Tiptap = ({ content, onChange, onAddImage }: TiptapProps) => {
         <div className={styles.bar}></div>
         {/* 폰트 색상 */}
         <div
+          ref={palletteRef}
           onClick={() => setIsPaletteOpen((prev) => !prev)}
           className={styles.fontColor_container}
         >
