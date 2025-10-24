@@ -863,7 +863,9 @@ const Tiptap = ({ content, onChange, onAddImage }: TiptapProps) => {
       </div>
 
       {/* 에디터 */}
-      <EditorContent editor={editor} className={styles.editor} />
+      <div className={styles.editor_container}>
+        <EditorContent editor={editor} className={styles.editor} />
+      </div>
     </div>
   );
 };

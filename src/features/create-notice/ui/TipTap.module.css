@@ -12,7 +12,8 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 16px;
-  margin-bottom: 10px;
+  padding: 10px;
+  border-bottom: 1px solid #e5e5e5;
 }
 
 .toolbar button {
@@ -21,7 +22,9 @@
   width: 24px;
   height: 24px;
 }
-
+.editor_container {
+  padding: 20px;
+}
 .editor {
   border: 1px solid #e5e5e5;
   padding: 10px;
