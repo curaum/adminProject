@@ -40,16 +40,19 @@ export default function NoticeListPage() {
   const handleTitleChange = (e) => {
     const value = e.target.value;
     setTitle(value);
-    debouncedFetch(value);
   };
-  const handleTitleReset = () => {
-    setTitle("");
-    debouncedFetch("");
+
+  const handleFilterReset = () => {
+    handleAccessTargetChange(ACCESSTARGET_OPTIONS[0]);
+    handleTitleReset();
   };
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
     fetchNoticeList(newPage, pageSize, accessTarget.value, title);
     // 실제로는 여기서 서버에 요청 보내거나 데이터를 다시 불러옴
+  };
+  const handleTitleReset = () => {
+    setTitle("");
   };
   const handleAccessTargetChange = (target) => {
     setAccessTarget(target);
@@ -72,10 +75,14 @@ export default function NoticeListPage() {
       : `/notice/${pid}`;
     window.open(url, "_blank");
   };
-  // 페이지가 마운트될 때 공지사항 리스트 호출
+
   useEffect(() => {
-    fetchNoticeList(0, pageSize, accessTarget.value, title); // page=0, size=10
-  }, [accessTarget]);
+    debouncedFetch(title);
+
+    return () => {
+      debouncedFetch.cancel(); // 메모리 누수 방지
+    };
+  }, [accessTarget, title, debouncedFetch]);
 
   if (error) return <div>오류 발생: {error}</div>;
 
@@ -83,23 +90,41 @@ export default function NoticeListPage() {
     <div className={styles.container}>
       <div className={styles.filterContainer}>
         <div className={styles.filterBox}>
-          <div className={styles.accessTarget_box}>
-            <div>공지 대상</div>
-            <DropdownSelect
-              value={accessTarget}
-              options={ACCESSTARGET_OPTIONS}
-              onChange={handleAccessTargetChange}
-            />
+          <div
+            style={{
+              display: "flex",
+              gap: "16px",
+            }}
+          >
+            <div className={styles.accessTarget_box}>
+              <div>공지 대상</div>
+              <DropdownSelect
+                value={accessTarget}
+                options={ACCESSTARGET_OPTIONS}
+                onChange={handleAccessTargetChange}
+              />
+            </div>
+            <div className={styles.accessTarget_box}>
+              <div>제목</div>
+              <SearchInput
+                value={title}
+                onChange={handleTitleChange}
+                onReset={handleTitleReset}
+                placeholder="공지 제목을 검색해주세요."
+              />
+            </div>
           </div>
-          <div className={styles.accessTarget_box}>
-            <div>제목</div>
-            <SearchInput
-              value={title}
-              onChange={handleTitleChange}
-              onReset={handleTitleReset}
-              placeholder="공지 제목을 검색해주세요."
-            />
-          </div>
+          {(accessTarget !== ACCESSTARGET_OPTIONS[0] || title !== "") && (
+            <button>
+              <Image
+                src="/images/icon_reset.svg"
+                alt="reset"
+                width={24}
+                height={24}
+                onClick={handleFilterReset}
+              />
+            </button>
+          )}
         </div>
 
         <Pagination
