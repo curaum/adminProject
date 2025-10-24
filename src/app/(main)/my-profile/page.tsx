@@ -4,8 +4,10 @@ import { useSearchParams, useParams } from "next/navigation";
 import { useUserStore } from "@/entities/user/model/userStore";
 import styles from "./MyProfile.module.css";
 import BottomNavBar from "@/shared/ui/BottomNavBar";
+import { useLogout } from "@/entities/user/model/useLogout";
 export default function MyProfilePage() {
   const userInfo = useUserStore((state) => state.userInfo);
+  const { logout } = useLogout();
   return (
     <main>
       <div className={styles.profileRow}>
@@ -15,11 +17,10 @@ export default function MyProfilePage() {
       <BottomNavBar
         buttons={[
           {
-            id: "create",
-            label: "공지 등록",
-            onClick: () => handleSave(notice),
-            activeStyle: { backgroundColor: "#51c37e", color: "#fff" },
-            inactiveStyle: { backgroundColor: "#F5F7F7", color: "#7c7c7c" },
+            id: "logout",
+            label: "로그아웃",
+            onClick: logout,
+            activeStyle: { borderColor: "#FE665C", color: "#FE665C" },
           },
         ]}
       />

@@ -202,7 +202,7 @@ export default function NoticeListPage() {
           {
             id: "create",
             label: "공지 작성",
-            onClick: () => navigateToNoticeCreatePage(),
+            onClick: navigateToNoticeCreatePage,
             activeStyle: { borderColor: "#51c37e", color: "#51c37e" },
           },
         ]}

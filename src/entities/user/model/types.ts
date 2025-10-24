@@ -4,6 +4,7 @@ export interface UserInfoResponse {
   rolePid: number;
   userName: string;
   company: Company;
+  mappingFactory: any;
 }
 
 export interface Company {
