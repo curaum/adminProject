@@ -8,6 +8,7 @@ import { formatDateAndTime } from "@/shared/utils/dateUtil";
 import styles from "./NoticeListPage.module.css";
 import { useToast } from "@/shared/utils/ToastContext";
 import BottomNavBar from "@/shared/ui/BottomNavBar";
+import DropdownSelect from "@/shared/ui/DropdownSelect";
 import debounce from "lodash.debounce";
 const ACCESSTARGET_OPTIONS = [
   { label: "전체", value: "" },
@@ -90,34 +91,11 @@ export default function NoticeListPage() {
         <div className={styles.filterBox}>
           <div className={styles.accessTarget_box}>
             <div>공지 대상</div>
-            <div className={styles.accessTarget_container}>
-              <button
-                className={styles.accessTarget_button}
-                onClick={() => setShowAccessTarget((prev) => !prev)}
-              >
-                <span>{accessTarget.label}</span>
-                <Image
-                  src={"/images/icon_toggle.svg"}
-                  alt="toggle"
-                  width={12}
-                  height={6}
-                />
-              </button>
-              {showAccessTarget && (
-                <div className={styles.accessTarget_dropdown}>
-                  {ACCESSTARGET_OPTIONS.map((opt, index) => {
-                    return (
-                      <button
-                        key={opt.value}
-                        onClick={() => handleAccessTargetChange(opt)}
-                      >
-                        {opt.label}
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
+            <DropdownSelect
+              value={accessTarget}
+              options={ACCESSTARGET_OPTIONS}
+              onChange={handleAccessTargetChange}
+            />
           </div>
           <div className={styles.accessTarget_box}>
             <div>제목</div>
