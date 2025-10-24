@@ -2,22 +2,22 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 
-export interface DropdownOption {
+export interface DropdownOption<T = string | number> {
   label: string;
-  value: string | number;
+  value: T;
 }
 
-interface DropdownSelectProps {
-  value: DropdownOption;
-  options: DropdownOption[];
-  onChange: (option: DropdownOption) => void;
+interface DropdownSelectProps<T> {
+  value: DropdownOption<T>;
+  options: DropdownOption<T>[];
+  onChange: (option: DropdownOption<T>) => void;
 }
 
-export default function DropdownSelect({
+export default function DropdownSelect<T>({
   value,
   options,
   onChange,
-}: DropdownSelectProps) {
+}: DropdownSelectProps<T>) {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 

@@ -7,11 +7,10 @@ import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
-import AutoUnlinkOnDelete from "@/shared/utils/AutoUnlinkOnDelete";
 import { TextStyle, Color, FontSize } from "@tiptap/extension-text-style";
 import { useRef, useState, useEffect } from "react";
-import { useClickOutside } from "@/shared/utils/useClickOutside";
 import NextImage from "next/image";
+import DropdownSelect from "@/shared/ui/DropdownSelect";
 interface TiptapProps {
   content: string;
   onChange: (value: string) => void;
@@ -40,7 +39,9 @@ const INDENT_UNIT = "\u00A0\u00A0\u00A0\u00A0";
 const Tiptap = ({ content, onChange, onAddImage }: TiptapProps) => {
   const [selectedColor, setSelectedColor] = useState<string>("#000000");
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
-  const [selectedLabel, setSelectedLabel] = useState("보통");
+  const [selectedFontSize, setSelectedFontSize] = useState(
+    FONT_SIZE_OPTIONS[2]
+  );
   const increaseIndent = () => {
     if (!editor) return;
 
@@ -111,19 +112,14 @@ const Tiptap = ({ content, onChange, onAddImage }: TiptapProps) => {
     setSelectedColor("");
     setIsPaletteOpen(false);
   };
-  const applyFontSize = (opt: { label: string; value: string }) => {
+  const applyFontSize = (opt: { label: string; value: string | number }) => {
     editor.chain().focus().setFontSize(opt.value).run();
     setShowFontSizeOptions(false);
-    setSelectedLabel(opt.label);
+    setSelectedFontSize(opt);
   };
 
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const [showFontSizeOptions, setShowFontSizeOptions] = useState(false);
-
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
-
-  // 바깥 클릭 시 드롭다운 닫기
-  useClickOutside(dropdownRef, () => setShowFontSizeOptions(false));
 
   const editor = useEditor({
     extensions: [
@@ -153,11 +149,11 @@ const Tiptap = ({ content, onChange, onAddImage }: TiptapProps) => {
       const color = attrs.color || "#000000"; // 기본 검정
       const fontSize = attrs.fontSize || "16px"; // 기본 16px
 
-      const label =
-        FONT_SIZE_OPTIONS.find((option) => option.value === fontSize)?.label ||
-        "보통";
+      const selectedFontSize =
+        FONT_SIZE_OPTIONS.find((option) => option.value === fontSize) ||
+        FONT_SIZE_OPTIONS[2];
       setSelectedColor(color);
-      setSelectedLabel(label);
+      setSelectedFontSize(selectedFontSize);
     },
 
     immediatelyRender: false,
@@ -206,48 +202,12 @@ const Tiptap = ({ content, onChange, onAddImage }: TiptapProps) => {
       {/* 툴바 */}
       <div className={styles.toolbar}>
         {/* 폰트 크기 */}
-        <div
-          ref={dropdownRef}
-          className={styles.fontSize_dropdown}
-          style={{ position: "relative", display: "inline-block" }}
-        >
-          <button
-            className={styles.button}
-            onClick={() => setShowFontSizeOptions((prev) => !prev)}
-          >
-            <span>{selectedLabel}</span>
-            <NextImage
-              src={"/images/icon_toggle.svg"}
-              alt="toggle"
-              width={12}
-              height={6}
-            />
-          </button>
+        <DropdownSelect<string>
+          value={selectedFontSize}
+          options={FONT_SIZE_OPTIONS}
+          onChange={applyFontSize}
+        />
 
-          {showFontSizeOptions && (
-            <div className={styles.fontSize_options}>
-              {FONT_SIZE_OPTIONS.map((opt, index) => {
-                const isFirst = index === 0;
-                const isLast = index === FONT_SIZE_OPTIONS.length - 1;
-
-                return (
-                  <button
-                    key={opt.value}
-                    onClick={() => applyFontSize(opt)}
-                    style={{
-                      borderTopLeftRadius: isFirst ? 4 : 0,
-                      borderTopRightRadius: isFirst ? 4 : 0,
-                      borderBottomLeftRadius: isLast ? 4 : 0,
-                      borderBottomRightRadius: isLast ? 4 : 0,
-                    }}
-                  >
-                    {opt.label}
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </div>
         <div className={styles.bar}></div>
         {/* 폰트 색상 */}
         <div
