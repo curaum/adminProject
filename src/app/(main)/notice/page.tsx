@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useNoticeList } from "@/entities/notice/model/useNoticeList";
 import Pagination from "@/shared/ui/Pagination";
@@ -31,12 +31,23 @@ export default function NoticeListPage() {
   const [title, setTitle] = useState("");
   const pageSize = 10;
 
-  const debouncedFetch = useCallback(
-    debounce((value) => {
-      fetchNoticeList(page, pageSize, accessTarget.value, value);
-    }, 300),
-    []
+  const fetchWithLatestParams = useCallback(
+    (accessValue, titleValue) => {
+      fetchNoticeList(0, pageSize, accessValue, titleValue);
+    },
+    [pageSize]
   );
+
+  const debouncedFetch = useMemo(
+    () => debounce(fetchWithLatestParams, 300),
+    [fetchWithLatestParams]
+  );
+
+  useEffect(() => {
+    debouncedFetch(accessTarget.value, title);
+    return () => debouncedFetch.cancel();
+  }, [accessTarget, title, debouncedFetch]);
+
   const handleTitleChange = (e) => {
     const value = e.target.value;
     setTitle(value);
@@ -75,14 +86,6 @@ export default function NoticeListPage() {
       : `/notice/${pid}`;
     window.open(url, "_blank");
   };
-
-  useEffect(() => {
-    debouncedFetch(title);
-
-    return () => {
-      debouncedFetch.cancel(); // 메모리 누수 방지
-    };
-  }, [accessTarget, title, debouncedFetch]);
 
   if (error) return <div>오류 발생: {error}</div>;
 

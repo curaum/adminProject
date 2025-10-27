@@ -27,8 +27,6 @@ export function setInterceptors(apiClient: AxiosInstance) {
     (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
       const accessToken = getCookie("accessToken") || getCookie("memoryToken");
 
-      console.log("요청 accessToken", accessToken);
-      console.log("요청 config headers", config.headers);
       if (accessToken && config.headers) {
         config.headers["Authorization"] = `Bearer ${accessToken}`;
       }
@@ -53,7 +51,6 @@ export function setInterceptors(apiClient: AxiosInstance) {
     },
     async function (error: AxiosError): Promise<AxiosError> {
       const response = error.response as AxiosResponse<any> | undefined;
-      console.log("error response", response);
       if (response?.status === 401 || response?.status === 403) {
         const result = await accessTokenRefresh();
         if (result.status === 200) {
