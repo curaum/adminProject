@@ -218,7 +218,11 @@ export default function NoticeForm({
             id: "create",
             label: "공지 등록",
             onClick: () => handleSave(notice),
-            disabled: !title || !content,
+            disabled:
+              !title ||
+              !content ||
+              content === "<p></p>" ||
+              accessTargetList.size === 0,
             activeStyle: { backgroundColor: "#51c37e", color: "#fff" },
             inactiveStyle: { backgroundColor: "#F5F7F7", color: "#7c7c7c" },
           },
