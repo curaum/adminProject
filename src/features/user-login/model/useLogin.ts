@@ -4,18 +4,7 @@ import { loginApi } from "../api/login";
 import { getUserInfo } from "@/entities/user/api/getUserInfo";
 import { setCookie } from "@/shared/lib/cookies";
 import { useFetchUser } from "@/entities/user/model/useFetchUser";
-export const setLocale = (locale: "ko" | "en") => {
-  localStorage.setItem("locale", locale);
-  document.documentElement.lang = locale;
-};
-const getOS = () => {
-  const userAgent = navigator.userAgent;
-  if (/windows/i.test(userAgent)) return "WINDOWS";
-  if (/android/i.test(userAgent)) return "ANDROID";
-  if (/iPad|iPhone|iPod/.test(userAgent)) return "IOS";
-  if (/Macintosh|MacIntel|MacPPC|Mac68K/.test(userAgent)) return "MAC";
-  return "UNKNOWN";
-};
+import { getOS } from "@/shared/utils/getOs";
 
 export const useLogin = () => {
   const router = useRouter();
