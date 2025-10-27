@@ -5,7 +5,7 @@ import {
   UpdateNoticeRequest,
   CreateNoticeRequest,
 } from "@/entities/notice/model/types";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import styles from "./NoticeDetailPage.module.css";
 import Tiptap from "@/features/create-notice/ui/TipTap";
 import BottomNavBar from "@/shared/ui/BottomNavBar";
@@ -24,6 +24,8 @@ export default function NoticeForm({
 }) {
   const router = useRouter();
   const { showToast } = useToast();
+  const editorRef = useRef<any>(null);
+
   const [title, setTitle] = useState(notice?.title ?? "");
   const [content, setContent] = useState(notice?.content ?? "");
   const [type, setType] = useState(notice?.type ?? "NORMAL");
@@ -104,13 +106,17 @@ export default function NoticeForm({
   const { fetchCreateNotice } = useCreateNotice();
 
   const handleSave = async (notice) => {
+    const editorImages = editorRef.current.getEditorImages(); // ✅ 호출 가능
+    const filteredImages = imageList.filter(
+      (file) => editorImages.includes(file.url) // or file.realName
+    );
     const body: UpdateNoticeRequest | CreateNoticeRequest = {
       ...(notice ? { pid: notice.pid } : {}),
       title,
       content,
       type,
       accessTargetList: Array.from(accessTargetList),
-      imageFileDTOList: imageList.map((item) => ({
+      imageFileDTOList: filteredImages.map((item) => ({
         realName: item.realName,
         virtualName: item.virtualName,
         contentType: item.contentType,
@@ -191,6 +197,7 @@ export default function NoticeForm({
         {/* 내용 */}
         <div className={styles.textarea}>
           <Tiptap
+            ref={editorRef}
             content={content}
             onChange={(val) => setContent(val)}
             onAddImage={handleAddImage}
