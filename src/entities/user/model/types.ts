@@ -3,8 +3,8 @@ export interface UserInfoResponse {
   id: string;
   rolePid: number;
   userName: string;
-  company: Company;
-  mappingFactory: any;
+  companyName: string;
+  companyPid: number;
 }
 
 export interface Company {

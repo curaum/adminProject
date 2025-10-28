@@ -10,9 +10,7 @@ const Header = () => {
     <div className={styles.header_layout}>
       <div className={styles.header_container}>
         <div className="flex items-center">
-          <p className={styles.user_company_name}>
-            {userInfo?.company.companyName}
-          </p>
+          <p className={styles.user_company_name}>{userInfo?.companyName}</p>
         </div>
 
         <Link href="/my-profile" className={styles.user_container}>
