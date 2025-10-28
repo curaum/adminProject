@@ -32,10 +32,10 @@ export default function NoticeListPage() {
   const pageSize = 10;
 
   const fetchWithLatestParams = useCallback(
-    (accessValue, titleValue) => {
-      fetchNoticeList(0, pageSize, accessValue, titleValue);
+    (pageValue, accessValue, titleValue) => {
+      fetchNoticeList(pageValue, pageSize, accessValue, titleValue);
     },
-    [pageSize]
+    []
   );
 
   const debouncedFetch = useMemo(
@@ -44,9 +44,9 @@ export default function NoticeListPage() {
   );
 
   useEffect(() => {
-    debouncedFetch(accessTarget.value, title);
+    debouncedFetch(page, accessTarget.value, title);
     return () => debouncedFetch.cancel();
-  }, [accessTarget, title, debouncedFetch]);
+  }, [page, accessTarget, title, debouncedFetch]);
 
   const handleTitleChange = (e) => {
     const value = e.target.value;
@@ -59,7 +59,6 @@ export default function NoticeListPage() {
   };
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
-    fetchNoticeList(newPage, pageSize, accessTarget.value, title);
     // 실제로는 여기서 서버에 요청 보내거나 데이터를 다시 불러옴
   };
   const handleTitleReset = () => {
