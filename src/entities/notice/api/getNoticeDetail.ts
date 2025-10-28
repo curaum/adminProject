@@ -2,7 +2,7 @@ import { apiClient } from "@/shared/api";
 import { AxiosResponse } from "axios";
 import type { NoticeDetailResponse } from "../model/types";
 export async function getNoticeDetail(
-  pid: number | string
+  pid: number
 ): Promise<AxiosResponse<NoticeDetailResponse>> {
   try {
     const response = await apiClient.get(`api/admin/notice`, {

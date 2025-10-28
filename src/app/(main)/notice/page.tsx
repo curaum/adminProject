@@ -86,8 +86,6 @@ export default function NoticeListPage() {
     window.open(url, "_blank");
   };
 
-  if (error) return <div>오류 발생: {error}</div>;
-
   return (
     <div className={styles.container}>
       <div className={styles.filterContainer}>

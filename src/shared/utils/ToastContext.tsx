@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 
 interface ToastContextType {
-  showToast: (msg: string, isPouch?: boolean, duration?: number) => void;
+  showToast: (msg: string, duration?: number) => void;
 }
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined);

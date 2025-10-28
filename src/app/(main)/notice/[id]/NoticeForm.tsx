@@ -17,14 +17,18 @@ import AttachmentUploader from "@/shared/ui/AttachmentUploader";
 import { uploadFile } from "@/shared/api/uploadFile";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/shared/utils/ToastContext";
+interface EditorInstance {
+  getEditorImages: () => string[];
+  // 필요한 메서드 추가
+}
 export default function NoticeForm({
   notice,
 }: {
-  notice?: NoticeDetailResponse;
+  notice?: NoticeDetailResponse | null;
 }) {
   const router = useRouter();
   const { showToast } = useToast();
-  const editorRef = useRef<any>(null);
+  const editorRef = useRef<EditorInstance>(null);
 
   const [title, setTitle] = useState(notice?.title ?? "");
   const [content, setContent] = useState(notice?.content ?? "");
@@ -105,8 +109,8 @@ export default function NoticeForm({
   const { fetchUpdateNotice, success } = useUpdateNotice();
   const { fetchCreateNotice } = useCreateNotice();
 
-  const handleSave = async (notice) => {
-    const editorImages = editorRef.current.getEditorImages(); // ✅ 호출 가능
+  const handleSave = async (notice: NoticeDetailResponse | undefined) => {
+    const editorImages = editorRef.current?.getEditorImages() || []; // ✅ 호출 가능
     const filteredImages = imageList.filter(
       (file) => editorImages.includes(file.url) // or file.realName
     );

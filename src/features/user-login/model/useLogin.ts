@@ -27,7 +27,7 @@ export const useLogin = () => {
         await fetchUserInfo();
         router.replace("/notice");
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("Login failed", error);
     }
   };

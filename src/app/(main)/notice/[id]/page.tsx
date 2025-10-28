@@ -25,16 +25,16 @@ async function fetchNoticeDetail(pid: string): Promise<NoticeDetailResponse> {
   return JSON.parse(text);
 }
 
-export default async function NoticeDetailPage({
-  params,
-  searchParams,
-}: {
+type Props = {
   params: { id: string };
-  searchParams: { mode?: string };
-}) {
+  searchParams?: { mode?: string };
+};
+
+export default async function NoticeDetailPage({ params, searchParams }) {
   // Server Component이므로 params는 동기 객체로 바로 사용 가능
-  const { id } = params;
-  const { mode } = searchParams;
+  const { id } = await params;
+  const sp = await searchParams; // ← 반드시 await
+  const mode = sp?.mode;
   let notice: NoticeDetailResponse | null = null;
   try {
     notice = await fetchNoticeDetail(id);

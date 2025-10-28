@@ -43,7 +43,7 @@ export const LoginForm = () => {
         <Check
           value={isSaveId}
           text="로그인 상태 유지하기"
-          onClick={() => setIsSaveId((prev) => !prev)}
+          onChangeValue={() => setIsSaveId((prev) => !prev)}
         />
       </div>
       <Button

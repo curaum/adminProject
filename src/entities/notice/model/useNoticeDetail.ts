@@ -3,9 +3,9 @@ import { getNoticeDetail } from "../api/getNoticeDetail";
 import type { NoticeDetailResponse } from "./types";
 
 export function useNoticeDetail() {
-  const [notice, setNotice] = useState<NoticeDetailResponse>({});
+  const [notice, setNotice] = useState({});
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<Error | null>(null);
 
   const fetchNoticeDetail = async (pid: number) => {
     setLoading(true);
@@ -14,11 +14,9 @@ export function useNoticeDetail() {
     try {
       const response = await getNoticeDetail(pid);
       setNotice(response.data);
-    } catch (err: any) {
+    } catch (err) {
       // 에러 메시지 처리
-      setError(
-        err.response?.data?.message || err.message || "공지사항 조회 실패"
-      );
+      setError(err as Error);
     } finally {
       setLoading(false);
     }

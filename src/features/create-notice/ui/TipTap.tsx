@@ -22,7 +22,7 @@ import "tiptap-extension-resizable-image/styles.css";
 interface TiptapProps {
   content: string;
   onChange: (value: string) => void;
-  onAddImage: (file: File) => void;
+  onAddImage: (file: File) => Promise<string>;
 }
 const COLORS = [
   "#3A3A3A",
@@ -121,14 +121,16 @@ const Tiptap = forwardRef(
             const textNode = node.content.firstChild;
             if (textNode && textNode.isText) {
               const text = textNode.text;
-              const newText = text.startsWith(INDENT_UNIT)
+              const newText = text?.startsWith(INDENT_UNIT)
                 ? text.slice(INDENT_UNIT.length)
                 : text;
 
               // ✅ marks 유지
-              const styledText = state.schema.text(newText, textNode.marks);
+              if (newText) {
+                const styledText = state.schema.text(newText, textNode.marks);
 
-              tr.replaceWith(pos + 1, pos + node.nodeSize - 1, styledText);
+                tr.replaceWith(pos + 1, pos + node.nodeSize - 1, styledText);
+              }
             }
           }
         }
@@ -150,8 +152,8 @@ const Tiptap = forwardRef(
       setSelectedColor("");
       setIsPaletteOpen(false);
     };
-    const applyFontSize = (opt: { label: string; value: string | number }) => {
-      editor.chain().focus().setFontSize(opt.value).run();
+    const applyFontSize = (opt: { label: string; value: string }) => {
+      editor?.chain().focus().setFontSize(opt.value).run();
       setSelectedFontSize(opt);
     };
 
@@ -234,7 +236,7 @@ const Tiptap = forwardRef(
       const file = files[0];
       const url = await onAddImage(file);
 
-      editor.chain().focus().setImage({ src: url }).run();
+      editor?.chain().focus().setImage({ src: url }).run();
 
       // 선택 초기화
       if (imageInputRef.current) imageInputRef.current.value = "";
@@ -322,7 +324,7 @@ const Tiptap = forwardRef(
           </div>
 
           {/* 볼드 */}
-          <button onClick={() => editor.chain().focus().toggleBold().run()}>
+          <button onClick={() => editor?.chain().focus().toggleBold().run()}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -337,7 +339,7 @@ const Tiptap = forwardRef(
             </svg>
           </button>
           {/* 이탤릭 */}
-          <button onClick={() => editor.chain().focus().toggleItalic().run()}>
+          <button onClick={() => editor?.chain().focus().toggleItalic().run()}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -361,7 +363,7 @@ const Tiptap = forwardRef(
           </button>
           {/* 밑줄 */}
           <button
-            onClick={() => editor.chain().focus().toggleUnderline().run()}
+            onClick={() => editor?.chain().focus().toggleUnderline().run()}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -381,7 +383,7 @@ const Tiptap = forwardRef(
             </svg>
           </button>
           {/* 취소선 */}
-          <button onClick={() => editor.chain().focus().toggleStrike().run()}>
+          <button onClick={() => editor?.chain().focus().toggleStrike().run()}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -407,7 +409,7 @@ const Tiptap = forwardRef(
           {/* 정렬 */}
           {/* 왼쪽 */}
           <button
-            onClick={() => editor.chain().focus().setTextAlign("left").run()}
+            onClick={() => editor?.chain().focus().setTextAlign("left").run()}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -448,7 +450,7 @@ const Tiptap = forwardRef(
           </button>
           {/* 중앙 */}
           <button
-            onClick={() => editor.chain().focus().setTextAlign("center").run()}
+            onClick={() => editor?.chain().focus().setTextAlign("center").run()}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -489,7 +491,7 @@ const Tiptap = forwardRef(
           </button>
           {/* 오른쪽 */}
           <button
-            onClick={() => editor.chain().focus().setTextAlign("right").run()}
+            onClick={() => editor?.chain().focus().setTextAlign("right").run()}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -530,7 +532,9 @@ const Tiptap = forwardRef(
           </button>
           {/* 양방향 */}
           <button
-            onClick={() => editor.chain().focus().setTextAlign("justify").run()}
+            onClick={() =>
+              editor?.chain().focus().setTextAlign("justify").run()
+            }
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -571,7 +575,7 @@ const Tiptap = forwardRef(
           </button>
           {/* 점 리스트 */}
           <button
-            onClick={() => editor.chain().focus().toggleBulletList().run()}
+            onClick={() => editor?.chain().focus().toggleBulletList().run()}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -623,7 +627,7 @@ const Tiptap = forwardRef(
           </button>
           {/* 숫자 리스트 */}
           <button
-            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+            onClick={() => editor?.chain().focus().toggleOrderedList().run()}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -794,7 +798,7 @@ const Tiptap = forwardRef(
               }
               if (url) {
                 editor
-                  .chain()
+                  ?.chain()
                   .focus()
                   .extendMarkRange("link")
                   .setLink({ href: finalUrl })
@@ -834,7 +838,7 @@ const Tiptap = forwardRef(
           </button>
           {/* 인용 */}
           <button
-            onClick={() => editor.chain().focus().toggleBlockquote().run()}
+            onClick={() => editor?.chain().focus().toggleBlockquote().run()}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -880,7 +884,7 @@ const Tiptap = forwardRef(
 
           {/* 구분선 */}
           <button
-            onClick={() => editor.chain().focus().setHorizontalRule().run()}
+            onClick={() => editor?.chain().focus().setHorizontalRule().run()}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

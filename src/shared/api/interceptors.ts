@@ -16,7 +16,10 @@ interface ErrorResponse {
   message: string;
   path: string;
 }
-
+interface ErrorData {
+  message: string; // 사용자에게 보여줄 메시지
+  [key: string]: string | number; // 기타 데이터 허용
+}
 let alertShown = false;
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -49,15 +52,22 @@ export function setInterceptors(apiClient: AxiosInstance) {
 
       return response;
     },
-    async function (error: AxiosError): Promise<AxiosError> {
-      const response = error.response as AxiosResponse<any> | undefined;
+    async function (
+      error: AxiosError
+    ): Promise<AxiosResponse<ErrorData> | AxiosError> {
+      const response = error.response as AxiosResponse<ErrorData> | undefined;
       if (response?.status === 401 || response?.status === 403) {
         const result = await accessTokenRefresh();
         if (result.status === 200) {
           const newToken = getCookie("accessToken");
           if (newToken) {
-            error.config.headers.Authorization = "Bearer " + newToken;
-            return apiClient(error.config);
+            if (error.config?.headers) {
+              error.config.headers.Authorization = "Bearer " + newToken;
+              return apiClient(error.config);
+            } else {
+              // config가 없으면 그냥 에러를 다시 reject
+              return Promise.reject(error);
+            }
           }
         }
       } else if (response?.data) {
@@ -107,7 +117,7 @@ export async function accessTokenRefresh() {
         const isKeepingLogIn = localStorage.getItem("keepingLogin") === "true"; // localStorage에서 값 확인
         const expirationDays = isKeepingLogIn ? 7 : 1 / 48; // 7일 또는 30분 (1/48일)
         setCookie("accessToken", accessToken, expirationDays); // 쿠키에 저장
-        setCookie("memoryToken", accessToken); // memoryToken 업데이
+        setCookie("memoryToken", accessToken); // memoryToken 업데이트
       }
     }
 
@@ -115,12 +125,19 @@ export async function accessTokenRefresh() {
   } catch (err) {
     if (!alertShown) {
       alertShown = true; // alert 표시한 것으로 설정
-      if (err.response?.data?.status === 109) {
-        alert("중복 로그인: 로그인 페이지로 이동합니다.");
+      // err가 객체인지 확인
+      if (err && typeof err === "object" && "response" in err) {
+        const axiosErr = err as AxiosError<{ status?: number }>;
+
+        if (axiosErr.response?.data?.status === 109) {
+          alert("중복 로그인: 로그인 페이지로 이동합니다.");
+        } else {
+          alert("토큰 만료: 로그인 페이지로 이동합니다.");
+        }
       } else {
-        alert("토큰 만료: 로그인 페이지로 이동합니다.");
+        alert("알 수 없는 오류: 로그인 페이지로 이동합니다.");
       }
-      redirect("/login");
+      window.location.href = "/login";
     }
 
     throw err; // 에러를 다시 throw하여 호출 측에서 처리할 수 있도록 전달

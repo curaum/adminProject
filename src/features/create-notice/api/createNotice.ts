@@ -1,10 +1,10 @@
 import { apiClient } from "@/shared/api";
 import { AxiosResponse } from "axios";
 
-import { UpdateNoticeRequest } from "../../../entities/notice/model/types";
+import { CreateNoticeRequest } from "../../../entities/notice/model/types";
 
 export async function createNotice(
-  data: UpdateNoticeRequest
+  data: CreateNoticeRequest
 ): Promise<AxiosResponse<void>> {
   try {
     console.log("request body", data);

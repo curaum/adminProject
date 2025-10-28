@@ -6,7 +6,7 @@ import { getOS } from "@/shared/utils/getOs";
 interface UseLogoutReturn {
   logout: () => Promise<void>;
   loading: boolean;
-  error: string | null;
+  error: Error | null;
 }
 export const useLogout = (): UseLogoutReturn => {
   const router = useRouter();
@@ -14,7 +14,7 @@ export const useLogout = (): UseLogoutReturn => {
   const clearUserInfo = useUserStore((state) => state.clearUserInfo);
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<Error | null>(null);
 
   const clearCookies = () => {
     const cookieNames = ["accessToken", "memoryToken"];
@@ -29,13 +29,13 @@ export const useLogout = (): UseLogoutReturn => {
     setError(null);
     const os = getOS();
     try {
-      await postLogout({ userPid: userInfo.userPid, os });
+      await postLogout({ userPid: userInfo!.userPid, os });
       clearCookies();
       clearUserInfo();
       // 로그아웃 성공 시 /login으로 이동
       router.replace("/login");
-    } catch (err: any) {
-      setError(err.message || "알 수 없는 오류");
+    } catch (err) {
+      setError(err as Error);
     } finally {
       setLoading(false);
     }

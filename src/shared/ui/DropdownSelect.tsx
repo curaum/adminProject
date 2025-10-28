@@ -60,7 +60,7 @@ export default function DropdownSelect<T>({
               const isLast = index === options.length - 1;
               return (
                 <button
-                  key={opt.value}
+                  key={opt.value && index}
                   onClick={() => {
                     onChange(opt);
                     setOpen(false);

@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import styles from "./AttachmentItem.module.css";
-import { FileDTO, File } from "@/entities/notice/model/types";
+import { File } from "@/entities/notice/model/types";
 
 interface AttachmentItemProps {
-  item: File | FileDTO;
+  item: File;
   isEditable: boolean;
   onDelete?: () => void;
 }

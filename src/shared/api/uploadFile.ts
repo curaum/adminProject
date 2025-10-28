@@ -2,7 +2,7 @@ import { apiClient } from "@/shared/api";
 import { AxiosResponse } from "axios";
 
 interface uploadFileParams {
-  file: any;
+  file: File;
   domainPurpose: string;
 }
 export async function uploadFile({

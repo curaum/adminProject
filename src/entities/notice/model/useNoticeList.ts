@@ -9,7 +9,7 @@ export function useNoticeList() {
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<Error | null>(null);
 
   const fetchNoticeList = async (
     page: number,
@@ -25,11 +25,9 @@ export function useNoticeList() {
       setNotices(response.data.content);
       setTotalPages(response.data.totalPages);
       setTotalElements(response.data.totalElements);
-    } catch (err: any) {
+    } catch (err) {
       // 에러 메시지 처리
-      setError(
-        err.response?.data?.message || err.message || "공지사항 조회 실패"
-      );
+      setError(err as Error);
     } finally {
       setLoading(false);
     }
