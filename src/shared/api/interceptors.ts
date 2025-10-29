@@ -8,7 +8,6 @@ import axios, {
   InternalAxiosRequestConfig,
 } from "axios";
 import { setCookie, getCookie } from "../lib/cookies";
-import { redirect } from "next/navigation";
 interface ErrorResponse {
   timestamp: string;
   status: number;
@@ -44,12 +43,6 @@ export function setInterceptors(apiClient: AxiosInstance) {
   // 응답 인터셉터
   apiClient.interceptors.response.use(
     (response: AxiosResponse): AxiosResponse => {
-      const accessToken = getCookie("accessToken");
-      console.log("응답 accessToken:", accessToken);
-      if (accessToken) {
-        setCookie("memoryToken", accessToken);
-      }
-
       return response;
     },
     async function (

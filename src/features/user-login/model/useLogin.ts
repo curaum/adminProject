@@ -1,7 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { loginApi } from "../api/login";
-import { getUserInfo } from "@/entities/user/api/getUserInfo";
 import { setCookie } from "@/shared/lib/cookies";
 import { useFetchUser } from "@/entities/user/model/useFetchUser";
 import { getOS } from "@/shared/utils/getOs";
@@ -22,6 +21,7 @@ export const useLogin = () => {
           const keepLogin = Boolean(isSaveId);
           localStorage.setItem("keepingLogin", keepLogin.toString());
           setCookie("accessToken", accessToken, keepLogin ? 7 : 1 / 48);
+          setCookie("memoryToken", accessToken);
         }
 
         await fetchUserInfo();

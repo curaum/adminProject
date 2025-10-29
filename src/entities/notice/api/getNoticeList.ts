@@ -15,7 +15,6 @@ export async function getNoticeList({
   title,
 }: GetNoticeListParams): Promise<AxiosResponse<NoticeListResponse>> {
   try {
-    console.log("getNoticeList", page, size, accessTarget, title);
     const response = await apiClient.get("/api/admin/notice/list", {
       params: { page, size, accessTarget, title },
     });
