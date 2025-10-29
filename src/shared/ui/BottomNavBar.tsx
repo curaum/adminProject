@@ -1,5 +1,5 @@
 "use client";
-import Button from "./Button";
+import Button from "./temp";
 import { useRouter } from "next/navigation";
 interface NavButton {
   id: string;
