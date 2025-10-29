@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useLogin } from "../model/useLogin";
 import styles from "./LoginForm.module.css";
-import Button from "@/shared/ui/temp";
+import Button from "@/shared/ui/Button";
 import Check from "@/shared/ui/Check";
 export const LoginForm = () => {
   const { login } = useLogin();
