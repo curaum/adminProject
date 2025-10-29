@@ -26,9 +26,11 @@ export const useLogin = () => {
 
         await fetchUserInfo();
         router.replace("/notice");
+        return true;
       }
     } catch (error) {
       console.error("Login failed", error);
+      return false;
     }
   };
 

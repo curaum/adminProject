@@ -25,10 +25,10 @@
   height: 48px;
   flex-shrink: 0;
   border-radius: 4px;
-  border: 1px solid #e5e5e5;
   padding: 10px;
   font-size: 16px;
   color: #3a3a3a;
+  margin-bottom: 2px;
 }
 .login_input::placeholder,
 .password_input::placeholder {
@@ -46,4 +46,12 @@
   font-size: 16px;
   color: #7c7c7c;
   cursor: pointer;
+}
+.error_message {
+  color: #fc5b54;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  height: 18px;
 }
