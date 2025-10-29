@@ -37,6 +37,7 @@
 .login_input:focus,
 .password_input:focus {
   outline: 1px solid #005a74;
+  border: 1px solid #e5e5e5 !important;
 }
 
 .login_persist {
