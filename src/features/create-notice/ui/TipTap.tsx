@@ -2,7 +2,7 @@
 
 import { useEditor, EditorContent, useEditorState } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import styles from "./Tiptap.module.css";
+import styles from "./TipTap.module.css";
 import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
 import Image from "@tiptap/extension-image";
