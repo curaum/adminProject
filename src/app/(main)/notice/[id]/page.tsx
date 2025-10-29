@@ -35,7 +35,7 @@ export default async function NoticeDetailPage({ params, searchParams }) {
   const { id } = await params;
   const sp = await searchParams; // ← 반드시 await
   const mode = sp?.mode;
-  let notice: NoticeDetailResponse | null = null;
+  let notice: NoticeDetailResponse | undefined = undefined;
   try {
     notice = await fetchNoticeDetail(id);
   } catch (e) {

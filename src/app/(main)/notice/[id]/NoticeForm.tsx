@@ -24,7 +24,7 @@ interface EditorInstance {
 export default function NoticeForm({
   notice,
 }: {
-  notice?: NoticeDetailResponse | null;
+  notice?: NoticeDetailResponse | undefined;
 }) {
   const router = useRouter();
   const { showToast } = useToast();
