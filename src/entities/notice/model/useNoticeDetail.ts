@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { getNoticeDetail } from "../api/getNoticeDetail";
-import type { NoticeDetailResponse } from "./types";
 
 export function useNoticeDetail() {
   const [notice, setNotice] = useState({});

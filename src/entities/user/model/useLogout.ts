@@ -30,14 +30,13 @@ export const useLogout = (): UseLogoutReturn => {
     const os = getOS();
     try {
       await postLogout({ userPid: userInfo!.userPid, os });
-      clearCookies();
-      clearUserInfo();
-      // 로그아웃 성공 시 /login으로 이동
-      router.replace("/login");
     } catch (err) {
       setError(err as Error);
     } finally {
       setLoading(false);
+      clearCookies();
+      clearUserInfo();
+      router.replace("/login");
     }
   };
 
