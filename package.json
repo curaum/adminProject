@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 60101",
+    "dev": "next dev -p 60102",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "dev:local": "cross-env NODE_ENV=local next dev -p 60101",
-    "dev:dev": "cross-env NODE_ENV=development next dev -p 60101",
+    "dev:local": "cross-env NODE_ENV=local next dev -p 60102",
+    "dev:dev": "cross-env NODE_ENV=development next dev -p 60102",
     "dev:staging": "cross-env NODE_ENV=staging next dev",
     "dev:prod": "cross-env NODE_ENV=production next dev"
   },
